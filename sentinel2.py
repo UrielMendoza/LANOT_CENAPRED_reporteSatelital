@@ -61,13 +61,13 @@ def listaBandas(pathInput,nivel,resolucion,banda):
     print("Archivo usado:"+archivoBanda[0])
     return archivoBanda[0]
 
-def RGB_TC(nivel,resolucion,pathInput,pathOutputGeoTiff):
+def RGB_TC(nivel,resolucion,pathInput,tile,pathOutputGeoTiff):
     dirTC = listaBandas(pathInput,nivel,resolucion,'TCI')
-    nombre = pathOutputGeoTiff+'TC_latest.tif'
+    nombre = pathOutputGeoTiff+'TC_'+tile+'_latest.tif'
     os.system('gdal_translate '+dirTC+' '+nombre)
 
-def RGB(r,g,b,pathOutputGeoTiff):
-    nombre = pathOutputGeoTiff+'SWIR_latest.tif'
+def RGB(r,g,b,tile,pathOutputGeoTiff):
+    nombre = pathOutputGeoTiff+'SWIR_'+tile+'_latest.tif'
     os.system('gdal_merge.py -separate -co PHOTOMETRIC=RGB -o '+nombre+' '+r+' '+g+' '+b)
 
 def generaDate(pathLatest,fecha):
@@ -90,7 +90,7 @@ tilesDirs = glob(pathL2A+'*')
 if len(tilesDirs) != 0:
     for tileDir in tilesDirs:
         archivo = glob(tileDir+'/*')[0]
-        
+
         print('Procesando: '+archivo)
         fecha = obtieneFecha(archivo)
         fechaImaProc = obtieneFechaImaProc(archivo)
@@ -111,7 +111,7 @@ if len(tilesDirs) != 0:
         g = pathTmp+bandas20m[1]+'.tif'
         b = pathTmp+bandas20m[0]+'.tif'
 
-        RGB_TC('L2A','R20m',pathTmp+dirI,pathLatest)
-        RGB(r,g,b,pathLatest)
+        RGB_TC('L2A','R20m',pathTmp+dirI,tile,pathLatest)
+        RGB(r,g,b,tile,pathLatest)
 
 #os.system('rm -r '+pathTmp+'*')
