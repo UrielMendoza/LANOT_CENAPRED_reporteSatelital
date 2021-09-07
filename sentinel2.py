@@ -114,4 +114,5 @@ if len(tilesDirs) != 0:
         RGB_TC('L2A','R20m',pathTmp+dirI,tile,pathLatest)
         RGB(r,g,b,tile,pathLatest)
 
-#os.system('rm -r '+pathTmp+'*')
+os.system('rm -r '+pathTmp+'*')
+os.system('rm -r '+pathL2A+'*')
