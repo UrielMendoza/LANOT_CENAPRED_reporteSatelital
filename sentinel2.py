@@ -2,7 +2,7 @@ import download_datasets
 import base
 import datetime
 
-pathOutputL2A = '/home/lanotadm/data/LANOT_CENAPRED_reporteSatelital/tmp/'
+pathOutputL2A = '/home/lanotadm/data/LANOT_CENAPRED_reporteSatelital/sentinel2/tmp/'
 start_date = datetime.datetime.now()
 end_date = datetime.datetime.now()
 region = 'volcanes'
