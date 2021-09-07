@@ -121,6 +121,9 @@
                                 <label for="check1">Zona de estudio</label><br>
                             </div> -->
                             <div class="Raster">
+                                <h1>Marcadores</h1>
+                                <input type="checkbox" id="iconos" value="1" checked/>
+                                <label for="check1">Volcánes</label><br>
                                 <h1>True Color</h1>
                                 <input type="checkbox" id="TC_T13QFB_latest" value="1" checked/>
                                 <label for="check1">Colima</label><br>
@@ -314,6 +317,14 @@
     });
     
     map.addLayer(vecLayer); 
+    $('#iconos').click(function(){
+        if($(this).is(':checked')){
+            map.addLayer(vecLayer);
+        } else {
+            map.removeLayer(vecLayer);
+            $('img').remove('.iconos');
+        }
+    });
 
     // POPUP VOLCAN
 
