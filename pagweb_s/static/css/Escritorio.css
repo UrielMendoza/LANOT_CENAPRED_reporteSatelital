@@ -73,7 +73,7 @@ header div.conten {
     overflow: auto;
     /* padding: 0; */
     color: white;
-    /* text-shadow: 0.5px 0.5px #189907; */
+    /* text-shadow: 0.5px 0.5px #a05b00; */
     background-color: rgb(37, 36, 36, 0.7);
     position: fixed;
     z-index: 3;
@@ -88,7 +88,7 @@ div.conten::-webkit-scrollbar {
 }
 
 div.conten::-webkit-scrollbar-thumb {
-    background: #37a345;
+    background: #a05b00;
     border-radius: 5px;
 }
 div.tab button{
@@ -100,7 +100,7 @@ div.tab button{
     
 }
 div.tab button.active {
-    background-color: #37a345;
+    background-color: #a05b00;
     
 }
 
@@ -164,7 +164,7 @@ div#infolayer h1, div#Capas h1 , div#Simbologia h1, div#con h1{
     padding: 10px;
     width: 25em;
     font-family: Verdana;
-    background: #37a345;
+    background: #a05b00;
     font-size: 15px;
     color: #ffff;
     border-radius: 0.5em;
@@ -277,7 +277,7 @@ div#con::-webkit-scrollbar {
 }
 
 div#con::-webkit-scrollbar-thumb {
-    background: #189907;
+    background: #a05b00;
     border-radius: 5px;
 }
 
@@ -305,7 +305,7 @@ div#Capas {
     height: 90%;
     overflow: auto;
     color: white;
-    text-shadow: 0.5px 0.5px #189907;
+    text-shadow: 0.5px 0.5px #a05b00;
     /* background-color: rgb(37, 36, 36, 0.7); */
     position: absolute;
 }
@@ -315,7 +315,7 @@ div#Capas::-webkit-scrollbar {
 }
 
 div#Capas::-webkit-scrollbar-thumb {
-    background: #189907;
+    background: #a05b00;
     border-radius: 7px;
 }
 #fecha{
