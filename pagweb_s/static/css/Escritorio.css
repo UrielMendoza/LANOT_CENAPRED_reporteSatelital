@@ -444,7 +444,7 @@ div#Simbologia::-webkit-scrollbar {
 }
 
 div#Simbologia::-webkit-scrollbar-thumb {
-    background: #189907;
+    background: #606360;
     border-radius: 7px;
 }
 
@@ -593,3 +593,14 @@ iframe {
       transform: rotate(360deg);
     }
   }
+
+
+
+  /****************POPUP****************/
+
+  .popup {
+    border-radius: 5px;
+    border: 1px solid grey;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 2px;
+}
