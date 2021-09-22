@@ -68,9 +68,9 @@ def RGB_TC(nivel,resolucion,pathInput,tile,pathOutputGeoTiff):
 
 def RGB(r,g,b,tile,pathOutputGeoTiff):
     nombre = pathOutputGeoTiff+'SWIR_'+tile+'_latest.tif'
-    os.system('gdal_merge.py -ot uint16 -a_nodata 0 -separate -co PHOTOMETRIC=RGB -o '+nombre+' '+r+' '+g+' '+b)
-    #os.system('gdalbuildvrt -separate stack.vrt '+r+' '+g+' '+b)
-    #os.system('gdal_translate stack.vrt '+nombre)    
+    #os.system('gdal_merge.py -ot uint16 -a_nodata 0 -separate -co PHOTOMETRIC=RGB -o '+nombre+' '+r+' '+g+' '+b)
+    os.system('gdalbuildvrt -separate stack.vrt '+r+' '+g+' '+b)
+    os.system('gdal_translate stack.vrt '+nombre)    
 
 def generaDate(pathLatest,fecha):
     f = open('latest.csv','r')
