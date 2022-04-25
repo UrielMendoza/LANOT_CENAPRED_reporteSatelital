@@ -1,0 +1,779 @@
+<!doctype html>
+<html lang="Es"><!--Idioma Español-->
+    <head>
+        <meta charset="utf-8">
+        <meta name="Descripción" content="Sargazo LANOT"> <!--Nos genera una descripción de la pagina-->
+        <title>Visualizador de Sargazo LANOT</title> <!--Titulo de la pestaña en buscador-->
+        <meta name="viewport" content="width=device-width, user-scalable=no"> <!--Ajusta la pagina a la pantalla-->
+        <meta name="Keywords" content="Sargazo, LANOT, LAGE, México, UNAM"> <!--Palabras clave-->
+        <link rel="styleSheet" href="./css/Escritorio.css">
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"><!-- Adapta el ancho del navegador con el ancho del dispositivo-->
+        <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" -->
+            <!-- integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"> -->
+        <link rel="stylesheet" href="./css/ol.css">
+        <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.2.1/build/ol.js" ></script><!--Javascript de OpenLayers-->
+        <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>		
+        <link rel="stylesheet" href="./css/ol-ext.css">  <!--ol-ext-->
+        <script src="./js/ol-ext.js" type="text/javascript"></script><!--Javascript de ol-ext -->
+        <script src="http://code.jquery.com/jquery-latest.js"></script><!--Javascript de jquery-->
+        <script src="./js/menu.js" type="text/javascript"></script>
+        <script src="./js/under.js" type="text/javascript"></script>
+        <script src="./js/Herramientas.js" type="text/javascript"></script><!--Relacionado con la consulta de puntos-->
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script src="./js/infolayer.js" type="text/javascript"></script><!--Información de puntos de calor-->
+        <script src="./js/sargazo.js"></script>
+        <!-- Geocoder -->
+        <link rel="stylesheet" href="./js/ol-geocoder/ol-geocoder.css">
+        <script src="./js/ol-geocoder/ol-geocoder.js" type="text/javascript"></script>
+        <script src="./js/ol-geocoder/nominatim.js"></script>
+        <script src="./js/ol-geocoder-debug.js" type="text/javascript"></script>
+        <script src="./js/preloader.js" type="text/javascript"></script>
+        <!-- Sweetalert -->
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <!-- <script src="./js/main.js"></script> -->
+        
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> -->
+        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script> -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <div id="preloader"><img src="./img/lanot_logo_b_1.png"></div>
+        <header>	
+            <div class="menu_bar">
+                <a><img src="./img/32px/190-menu.png" class="menu"></a>
+               
+                <a href="/lanot/"><img src="./img/lanot_logo_b.png" class="lanot"></a>
+                <a href="https://www.copernicus.eu/es"><img src="/static/pagina_LANOT/img/copernicus_b.png" class="copernicus"></a>
+                <a id=Sar>Visualizador de Ceniza Volcánica</a>
+            </div>	
+                  
+            <nav>
+                <ul class="menu_mapcont">
+                    <li><a href="#" class="info"><img src="./img/16px/269-info.png">Tutoriales</a></li>
+                    <li><a href="/lanot/sargazo/vistas/?monthyear=2022-02" class="infoimage"><img src="./img/16px/015-images.png">Vistas</a></li>
+                    <li><p  onclick="return download();" class="download"><img src="./img/16px/052-folder-download.png">Descargas</p></li>
+                </ul>
+                
+            </nav>
+            <div class="conten">
+                <div class="tab">
+                    <button class="tablinks" onclick="openc(event, 'Capas')" id="defaultOpen">Capas</button>
+                    <button class="tablinks" onclick="openc(event, 'con')" >Consulta</button>
+                    <!-- <button class="tablinks" onclick="openc(event, 'infolayer')" >T.atributos</button> -->
+                    <button class="tablinks" onclick="openc(event, 'Simbologia')">Simbología</button>
+                </div>
+                <!-- <div id="conpestañas"> -->
+				 
+                    <!--form action ="" method="post"-->
+                        <div id="con" class="tabcontent">
+                            
+                            <h1> Ingrese las fechas correspondientes para realizar su consulta </h1>    			
+                            <div class="busqueda" id="busqueda">      
+                            <label id="label" for=""> Inicio:</label>
+                            <br><input type="date" name="date3"  id="date3" min= "2016-05-21" required>
+    
+                            <br><label id="label" for=""> Fin:</label>
+                            <br><input type="date" name="date4" id="date4" required>
+    
+                            <br><br>
+                            <div align="center"><input type="submit" value="Buscar" class="botton-Buscar" id="Buscar"/></div>    
+                            </div>
+    
+                            <h1> Consulta por Área de Sargazo</h1>
+                            <div id="busqueda" class="busqueda">
+                                <label for="mayormenor" id="label"> Área en kilómetros cuadrados</label>
+                                <select id="mayormenor">
+                                    <option value=">">Mayor que...</option>
+                                    <option value=">=">Mayor igual que...</option>
+                                    <option value="<">Menor que...</option>
+                                    <option value="<=">Menor igual que...</option>
+                                    <option value="==">Igual que...</option>
+                                </select>
+                                <br><input type="text" name="area" id="area">
+                                <br><br>
+                                <div align="center"><input type="submit" value="Ejecutar" class="botton-ejecutar" id="ejecutar"/></div>
+                                <br>
+                            </div>
+                        </div>
+                        <!-- {% csrf_token %} -->
+                        
+                        <div class="Area">
+                            <div class="areaSelect">Área de sargazo total del <div id="areaF_f" ></div><div id="areaF" ></div><div id="areaF_h" ></div> Área de sargazo seleccionada: <div id="areaS" class="area-seleccion"></div><div id="areaS_h" class="area-seleccion"></div></div> 
+                        </div>
+                        
+                        <div id="Capas" class="tabcontent">
+                            <div class="Vectoriales">
+
+                                <h1>Vectoriales</h1>
+
+                                <b>Marcadores</b> 
+                                <br>
+                                <input type="checkbox" id="iconos" checked/>
+                                <label for="check1">Volcánes</label><br>
+                                <b>Datos</b>
+                                <br>
+                                <input type="checkbox" id="sargazod" checked/>
+                                <label>Ceniza<div class="fechas-actualizacion" id="fecha-sargazo">Última detección {{ sargazoUltimo.fecha }}</div></label><label class="more"><input type="checkbox" id="moreinfos"><img src="./img/SVG/info_cir.svg"></label><br><div id="mis"></div>
+                                <b>Limites</b>
+                               
+                            </div>
+                            <div class="Raster">
+                                <h1>Raster</h1>
+
+                                <b>Sentinel-2 Color Verdadero</b> 
+                                <br>
+
+                                <input type="checkbox" id="TC_T13QFB_latest" value="1" checked/>
+                                <label for="check1">Colima</label><br>
+                                <input type="checkbox" id="TC_T14QNG_latest" value="1" checked/>
+                                <label for="check1">Popocatépetl</label><br>
+                                <input type="checkbox" id="TC_T15PWS_latest" value="1" checked/>
+                                <label for="check1">Tacana</label><br>
+                                <input type="checkbox" id="TC_T15QVV_latest" value="1" checked/>
+                                <label for="check1">Chichon</label><br>
+
+                                <b>Sentinel-2 SWIR</b>
+                                <br>
+                                <input type="checkbox" id="SWIR_T13QFB_latest" value="1" checked/>
+                                <label for="check1">Colima</label><br>
+                                <input type="checkbox" id="SWIR_T14QNG_latest" value="1" checked/>
+                                <label for="check1">Popocatépetl</label><br>
+                                <input type="checkbox" id="SWIR_T15PWS_latest" value="1" checked/>
+                                <label for="check1">Tacana</label><br>
+                                <input type="checkbox" id="SWIR_T15QVV_latest" value="1" checked/>
+                                <label for="check1">Chichon</label><br>
+
+                                <b>Goes-16/ABI</b>
+                                <br>
+                                <input type="checkbox" id="TC_abi_FD_latest" value="1" checked/>
+                                <label for="check1">Color Verdadero en día + Banda 13 (10.3 µm) en la noche</label><br>
+
+                            </div>
+                            <div class="BaseMap">
+                                <h1>Mapas Base</h1>
+                                <label class="mapbase">
+                                    <abbr title="Satelital de Google"><img src="./img/satelite.png"  id="satelital"></abbr><br>                                
+                                </label>
+                                <label class="mapbase">
+                                    <abrr title="Open Street Map"><img src="./img/OSM.png"  id="osm"></abrr><br>                                
+                                </label>
+                                <label class="mapbase">
+                                    <abrr title="Esri Gray (light)"><img src="./img/gray.PNG"  id="gray"></abrr><br>                                
+                                </label>
+                                <label class="mapbase">
+                                    <abrr title="Map Box (dark)"><img src="./img/gebco.PNG"  id="gebco"></abrr><br>                                
+                                </label>
+                                
+                            </div>
+                        </div>
+                        <div id="Simbologia" class="tabcontent">
+                            <h1>Simbología</h1>
+                            <div id="imagen">
+                                <img src="./img/Simbo/zona.png" class="estudio"/>
+                            </div>
+                        </div>                                
+                <!-- </div> -->
+        </div>
+        <div id="icons"><img src="./img/64px/pausa.png" id="barras"></div>
+        <!--div id="principal contenedor limpiar"-->
+            
+			
+        </header>
+
+    <div id="body-grapper"></div>
+    <div id="downloadpage">
+        <div id="salida" onclick="salida();">X</div>
+        <div class="contenedor">
+            <h1>Para poder ingresar a las descargas, necesitará de un usuario y contraseña que se le proporcionará enviando un correo a 
+                lanot@igg.unam.mx
+            </h1>
+            <p>Si usted ya cuenta con un usuario y contraseña dar clic en ingresar.</p>
+            <a href="http://132.247.103.154/sargazo">Ingresar</a>
+        </div>
+    </div>
+    <div id="mouse-position"></div>
+    <div id="gebcosimbology"></div>
+    
+    <div id="infolayer" >
+        <h1>Tabla de atributos de los polígonos de sargazo</h1>
+        <!-- <select id="selectcapas"><option value="sargazod">Sargazo</option></select>
+        <input type="submit" value="Elegir" class="botton-elegir" id="elegir"/> -->
+        <table id="infolay" class="tableprin" >
+            <thead class="tdark">
+                <tr>
+                    <th>Id</th>
+                    <th>IdPolígono</th>
+                    <th>Tile</th>
+                    <th>Fecha</th>
+                    <th>Fecha_día</th>
+                    <th>Área (km2)</th>
+                    <th>Dist. costa(km)</th>
+                </tr>
+            </thread>
+            <tbody>
+                {%for i in infotab%}
+                    <tr>
+                    {%for j in i%}
+                        <td>{{j}}</td>
+                    {%endfor%}
+                    </tr>
+                {%endfor%}
+            </tbody>
+        </table>
+    </div>  
+    <section>
+          
+    <div id="map" class="map"></div>        
+    <br>
+    <abbr title="Capas">    
+        <div id="fig"><img src="./img/64px/flecha.png"></div>
+    </abbr>
+    
+    
+    <div class="barraherra" id="herra">   
+        <abbr title="Herramienta para medir">
+            <div id="fig2"><label><input type="checkbox" id="fch2"/><img src="./img/SVG/regla.svg"></label></div>
+        </abbr>
+        <abbr title="Información de área por rectangulo"> 
+            <div id="fig3"><label><input type="checkbox" id="fch3"/><img src="./img/64px/rectangle.png"></label></div>
+        </abbr>
+        <abbr title="Información con ventana emergente">
+            <div id="fig4"><label><input type="checkbox" id="fch4"/><img src="./img/SVG/info.svg"></label></div>
+        </abbr>
+    </div>
+
+    <div class="barraherra" id="herra1">
+        <abbr title="No se detectó sargazo en el último paso del satelite">
+            <div id="fig5"><label><input type="checkbox" id="fch5" checked/><svg version="1.1" xmlns="http://www.w3.org/2000/svg"
+                width="34" height="34">
+            <circle cx="12" cy="12" r="10">
+            </svg></label></div>
+        </abbr>
+        <abbr title="Estadísticas">
+            <div id="fig6"><label><input type="checkbox" id="fch6"/><img src="./img/SVG/histograma.png"></label></div>
+        </abbr>
+        <abbr title="Tabla de atributos de sargazo">
+            <div id="fig7"><label><input type="checkbox" id="fch7"/><img src="./img/SVG/celulas.png"></label></div>
+        </abbr>
+    </div>
+    <div class="estadistica">
+        <iframe src="http://132.247.103.145/lanot/sargazo/estadisticas/" frameborder="0"></iframe>
+    </div>
+    <div class="medir">
+        <form class="form-inline">
+            <label for="type">Seleccione el tipo de medida &nbsp;</label><br>
+            <select id="type">
+              <option value="length">Distancia</option>
+              <option value="area">Área</option>
+            </select>
+          </form>
+    </div>
+    
+    <div id="ultimopaso">
+        <label>Último paso Sentinel-2:</label>
+        <label>{{ sargazoUltimo.fechaCatalogo }}</label><br>
+        <abrr title="No hubo detección de sargazo"><svg version="1.1" xmlns="http://www.w3.org/2000/svg"
+            width="30" height="30">
+        <circle cx="15" cy="15" r="15">
+        </svg></abbr>
+    </div>
+    
+    
+    <script>
+        
+    //variables fechas
+    // var fecha_1 = '0000-00-00';
+    // var fecha_2 = '0000-00-00';
+     
+
+    //Creamos objeto mapa		
+    var map = new ol.Map({//Abrimos mapa
+        target: 'map',
+        view: new ol.View({//Creamos vista del mapa
+            center: ol.proj.transform([-102, 19],'EPSG:4326', 'EPSG:3857'),//Cambiamos proyección a WGS84
+            zoom: 6,
+            //minZoom: 7.5,
+            //maxZoom: 22,
+            //extent: ol.proj.transformExtent([-93, 15, -81, 25], 'EPSG:4326','EPSG:3857')
+        })//Cerramos view
+    });//Cerramos mapa
+
+    //Creamos Barra de Escala
+    var scaleline = new ol.control.ScaleLine();
+                            
+    
+    //Creamos objeto posición del mouse	
+    var mousePositionControl = new ol.control.MousePosition({
+        className: 'custom-mouse-position',
+        projection: 'EPSG:4326',
+        target: document.getElementById('mouse-position'),
+        coordinateFormat: ol.coordinate.createStringXY(5),
+        undefinedHTML: '&nbsp;'
+    });//Cerramos objeto posición del mouse						
+        
+    
+    //Layer Estados de la república 
+/*     var wmsSourceestados = new ol.source.TileWMS({
+        visible: true,
+        url: 'http://132.247.103.145:8080/geoserver/DGRU_LANOT/wms',
+        params: {'LAYERS':'DGRU_LANOT:coastline_mexicoMerc','TILED': true},
+        serverType: 'geoserver',
+        });
+
+    var wmsLayerestados = new  ol.layer.Tile({
+        source: wmsSourceestados,
+        zIndex: 1
+    });
+    map.addLayer(wmsLayerestados);
+    $('#estados').click(function(){
+        var imgest =  "./img/Simbo/estados.png";
+        if($(this).is(':checked')){
+            map.addLayer(wmsLayerestados);
+            $('#imagen').append('<img src="'+imgest+'" class="imgest"/>');
+        } else {
+            map.removeLayer(wmsLayerestados);
+            $('img').remove('.imgest');
+        }
+    }); */
+
+    
+
+    //****************************************************************
+    // LAYERS
+
+    //Marcador VOLCAN
+    var iconmarcadores=[];
+
+    var iconmarcadorPopo = new ol.Feature({
+    geometry: new ol.geom.Point(ol.proj.transform([-98.6230556, 19.02388855], 'EPSG:4326',     
+    'EPSG:3857')),
+    name: 'UNAM',
+    });
+
+    var iconmarcadorColima = new ol.Feature({
+    geometry: new ol.geom.Point(ol.proj.transform([-103.6169681, 19.51235645], 'EPSG:4326',     
+    'EPSG:3857')),
+    name: 'UNAM',
+    });
+
+    var iconmarcadorChinchon = new ol.Feature({
+    geometry: new ol.geom.Point(ol.proj.transform([-93.2295351, 17.3602653], 'EPSG:4326',     
+    'EPSG:3857')),
+    name: 'UNAM',
+    });
+
+    var iconmarcadorTacana = new ol.Feature({
+    geometry: new ol.geom.Point(ol.proj.transform([-92.1085774, 15.1323543], 'EPSG:4326',     
+    'EPSG:3857')),
+    name: 'UNAM',
+    });
+
+    iconmarcadores.push(iconmarcadorPopo);
+    iconmarcadores.push(iconmarcadorColima);
+    iconmarcadores.push(iconmarcadorChinchon);
+    iconmarcadores.push(iconmarcadorTacana);
+    
+    var vecSource = new ol.source.Vector({
+    features: iconmarcadores //add an array of features
+    });
+
+    var iconStyle = new ol.style.Style({
+        image: new ol.style.Icon(({
+            anchorXUnits: 'pixels',
+            anchorYUnits: 'pixels',
+            scale: 0.09,
+            opacity: 0.7,
+            zIndex: 1,
+            src: './img/volcan.png'
+        }))
+    });
+
+
+    var vecLayer = new ol.layer.Vector({
+    source: vecSource,
+    style: iconStyle
+    });
+    
+    map.addLayer(vecLayer); 
+    $('#iconos').click(function(){
+        if($(this).is(':checked')){
+            map.addLayer(vecLayer);
+        } else {
+            map.removeLayer(vecLayer);
+            $('img').remove('.iconos');
+        }
+    });
+
+    // POPUP VOLCAN
+
+    // CAPAS GOES-16
+    var wmsSource_TC_abi_FD_latest = new ol.source.TileWMS({
+    visible: true,
+    url: 'http://132.247.103.145:8080/geoserver/LANOT/wms',
+    params: {'LAYERS':'	LANOT:TC_abi_a1_latest'},
+    serverType: 'geoserver',
+    });
+
+    var wmsLayer_TC_abi_FD_latest = new  ol.layer.Tile({
+        source: wmsSource_TC_abi_FD_latest,
+        zIndex: -1
+    });
+    map.addLayer(wmsLayer_TC_abi_FD_latest);
+    $('#TC_abi_FD_latest').click(function(){
+        var imgest =  "static/img/Simbo/estados.png";
+        if($(this).is(':checked')){
+            map.addLayer(wmsLayer_TC_abi_FD_latest);
+            $('#imagen').append('<img src="'+imgest+'" class="imgest"/>');
+        } else {
+            map.removeLayer(wmsLayer_TC_abi_FD_latest);
+            $('img').remove('.TC_abi_FD_latest');
+        }
+    });    
+    // CAPAS POLAR
+
+    // CAPAS SENTINEL-2
+    //Layer SWIR T13QFB
+    var wmsSource_SWIR_T13QFB_latest = new ol.source.TileWMS({
+    visible: true,
+    url: 'http://132.247.103.145:8080/geoserver/reporte_satelital/wms',
+    params: {'LAYERS':'reporte_satelital:SWIR_T13QFB_latest'},
+    serverType: 'geoserver',
+    });
+
+    var wmsLayer_SWIR_T13QFB_latest = new  ol.layer.Tile({
+        source: wmsSource_SWIR_T13QFB_latest,
+        zIndex: -1
+    });
+    map.addLayer(wmsLayer_SWIR_T13QFB_latest);
+    $('#SWIR_T13QFB_latest').click(function(){
+        var imgest =  "static/img/Simbo/estados.png";
+        if($(this).is(':checked')){
+            map.addLayer(wmsLayer_SWIR_T13QFB_latest);
+            $('#imagen').append('<img src="'+imgest+'" class="imgest"/>');
+        } else {
+            map.removeLayer(wmsLayer_SWIR_T13QFB_latest);
+            $('img').remove('.SWIR_T13QFB_latest');
+        }
+    });
+
+    //Layer SWIR T14QNG
+    var wmsSource_SWIR_T14QNG_latest = new ol.source.TileWMS({
+    visible: true,
+    url: 'http://132.247.103.145:8080/geoserver/reporte_satelital/wms',
+    params: {'LAYERS':'reporte_satelital:SWIR_T14QNG_latest'},
+    serverType: 'geoserver',
+    });
+
+    var wmsLayer_SWIR_T14QNG_latest = new  ol.layer.Tile({
+        source: wmsSource_SWIR_T14QNG_latest,
+        zIndex: -1
+    });
+    map.addLayer(wmsLayer_SWIR_T14QNG_latest);
+    $('#SWIR_T14QNG_latest').click(function(){
+        var imgest =  "static/img/Simbo/estados.png";
+        if($(this).is(':checked')){
+            map.addLayer(wmsLayer_SWIR_T14QNG_latest);
+            $('#imagen').append('<img src="'+imgest+'" class="imgest"/>');
+        } else {
+            map.removeLayer(wmsLayer_SWIR_T14QNG_latest);
+            $('img').remove('.SWIR_T14QNG_latest');
+        }
+    });
+
+    //Layer SWIR T15PWS
+    var wmsSource_SWIR_T15PWS_latest = new ol.source.TileWMS({
+    visible: true,
+    url: 'http://132.247.103.145:8080/geoserver/reporte_satelital/wms',
+    params: {'LAYERS':'reporte_satelital:SWIR_T15PWS_latest'},
+    serverType: 'geoserver',
+    });
+
+    var wmsLayer_SWIR_T15PWS_latest = new  ol.layer.Tile({
+        source: wmsSource_SWIR_T15PWS_latest,
+        zIndex: -1
+    });
+    map.addLayer(wmsLayer_SWIR_T15PWS_latest);
+    $('#SWIR_T15PWS_latest').click(function(){
+        var imgest =  "static/img/Simbo/estados.png";
+        if($(this).is(':checked')){
+            map.addLayer(wmsLayer_SWIR_T15PWS_latest);
+            $('#imagen').append('<img src="'+imgest+'" class="imgest"/>');
+        } else {
+            map.removeLayer(wmsLayer_SWIR_T15PWS_latest);
+            $('img').remove('.SWIR_T15PWS_latest');
+        }
+    });
+
+    //Layer SWIR T15QVV
+    var wmsSource_SWIR_T15QVV_latest = new ol.source.TileWMS({
+    visible: true,
+    url: 'http://132.247.103.145:8080/geoserver/reporte_satelital/wms',
+    params: {'LAYERS':'reporte_satelital:SWIR_T15QVV_latest'},
+    serverType: 'geoserver',
+    });
+
+    var wmsLayer_SWIR_T15QVV_latest = new  ol.layer.Tile({
+        source: wmsSource_SWIR_T15QVV_latest,
+        zIndex: -1
+    });
+    map.addLayer(wmsLayer_SWIR_T15QVV_latest);
+    $('#SWIR_T15QVV_latest').click(function(){
+        var imgest =  "static/img/Simbo/estados.png";
+        if($(this).is(':checked')){
+            map.addLayer(wmsLayer_SWIR_T15QVV_latest);
+            $('#imagen').append('<img src="'+imgest+'" class="imgest"/>');
+        } else {
+            map.removeLayer(wmsLayer_SWIR_T15QVV_latest);
+            $('img').remove('.SWIR_T15QVV_latest');
+        }
+    });
+
+    //Layer TC T13QFB
+    var wmsSource_TC_T13QFB_latest = new ol.source.TileWMS({
+    visible: true,
+    url: 'http://132.247.103.145:8080/geoserver/reporte_satelital/wms',
+    params: {'LAYERS':'reporte_satelital:TC_T13QFB_latest'},
+    serverType: 'geoserver',
+    });
+
+    var wmsLayer_TC_T13QFB_latest = new  ol.layer.Tile({
+        source: wmsSource_TC_T13QFB_latest,
+        zIndex: -1
+    });
+    map.addLayer(wmsLayer_TC_T13QFB_latest);
+    $('#TC_T13QFB_latest').click(function(){
+        var imgest =  "static/img/Simbo/estados.png";
+        if($(this).is(':checked')){
+            map.addLayer(wmsLayer_TC_T13QFB_latest);
+            $('#imagen').append('<img src="'+imgest+'" class="imgest"/>');
+        } else {
+            map.removeLayer(wmsLayer_TC_T13QFB_latest);
+            $('img').remove('.TC_T13QFB_latest');
+        }
+    });
+
+    //Layer TC T14QNG
+    var wmsSource_TC_T14QNG_latest = new ol.source.TileWMS({
+    visible: true,
+    url: 'http://132.247.103.145:8080/geoserver/reporte_satelital/wms',
+    params: {'LAYERS':'reporte_satelital:TC_T14QNG_latest'},
+    serverType: 'geoserver',
+    });
+
+    var wmsLayer_TC_T14QNG_latest = new  ol.layer.Tile({
+        source: wmsSource_TC_T14QNG_latest,
+        zIndex: -1
+    });
+    map.addLayer(wmsLayer_TC_T14QNG_latest);
+    $('#TC_T14QNG_latest').click(function(){
+        var imgest =  "static/img/Simbo/estados.png";
+        if($(this).is(':checked')){
+            map.addLayer(wmsLayer_TC_T14QNG_latest);
+            $('#imagen').append('<img src="'+imgest+'" class="imgest"/>');
+        } else {
+            map.removeLayer(wmsLayer_TC_T14QNG_latest);
+            $('img').remove('.TC_T14QNG_latest');
+        }
+    });
+
+    //Layer TC T15PWS
+    var wmsSource_TC_T15PWS_latest = new ol.source.TileWMS({
+    visible: true,
+    url: 'http://132.247.103.145:8080/geoserver/reporte_satelital/wms',
+    params: {'LAYERS':'reporte_satelital:TC_T15PWS_latest'},
+    serverType: 'geoserver',
+    });
+
+    var wmsLayer_TC_T15PWS_latest = new  ol.layer.Tile({
+        source: wmsSource_TC_T15PWS_latest,
+        zIndex: -1
+    });
+    map.addLayer(wmsLayer_TC_T15PWS_latest);
+    $('#TC_T15PWS_latest').click(function(){
+        var imgest =  "static/img/Simbo/estados.png";
+        if($(this).is(':checked')){
+            map.addLayer(wmsLayer_TC_T15PWS_latest);
+            $('#imagen').append('<img src="'+imgest+'" class="imgest"/>');
+        } else {
+            map.removeLayer(wmsLayer_TC_T15PWS_latest);
+            $('img').remove('.TC_T15PWS_latest');
+        }
+    });
+
+    //Layer TC T15QVV
+    var wmsSource_TC_T15QVV_latest = new ol.source.TileWMS({
+    visible: true,
+    url: 'http://132.247.103.145:8080/geoserver/reporte_satelital/wms',
+    params: {'LAYERS':'reporte_satelital:TC_T15QVV_latest'},
+    serverType: 'geoserver',
+    });
+
+    var wmsLayer_TC_T15QVV_latest = new  ol.layer.Tile({
+        source: wmsSource_TC_T15QVV_latest,
+        zIndex: -1
+    });
+    map.addLayer(wmsLayer_TC_T15QVV_latest);
+    $('#TC_T15QVV_latest').click(function(){
+        var imgest =  "static/img/Simbo/estados.png";
+        if($(this).is(':checked')){
+            map.addLayer(wmsLayer_TC_T15QVV_latest);
+            $('#imagen').append('<img src="'+imgest+'" class="imgest"/>');
+        } else {
+            map.removeLayer(wmsLayer_TC_T15QVV_latest);
+            $('img').remove('.TC_T15QVV_latest');
+        }
+    });
+
+    //MB Gray
+    var wmsSourceGray = new ol.source.TileImage({
+        visible: true,
+        url: 'http://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}'
+        });
+
+    var wmsLayerGray = new  ol.layer.Tile({
+        source: wmsSourceGray,
+        type: 'base',
+        visible: true,
+        zIndex: -1
+    });
+
+    $('#gray').click(function(){
+        map.addLayer(wmsLayerGray)
+        $(this).css({'border-color':'#00c3ff','border-width':'3px'})
+        $('#gebco').css('border-color','#0a48a3')
+        $('#satelital').css('border-color','#0a48a3')
+        $('#osm').css('border-color','#0a48a3')
+        map.removeLayer(wmsLayerOSM)
+        map.removeLayer(wmsLayerdark)
+        map.removeLayer(wmsLayersatel)
+        $('#gebcosimbology').html('')
+    });
+    $('#gray').css({'border-color':'#3551cc','border-width':'3px'})
+    //map.addLayer(wmsLayerGray);
+
+    //MB Satelital
+    var wmsSourcesatel = new ol.source.TileImage({
+        visible: true,
+        url: 'https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}'
+        });
+
+    var wmsLayersatel = new  ol.layer.Tile({
+        source: wmsSourcesatel,
+        type: 'base',
+        visible: true,
+        zIndex: -1
+    });
+
+    $('#satelital').click(function(){
+        map.addLayer(wmsLayersatel)
+        $(this).css({'border-color':'#00c3ff','border-width':'3px'})
+        $('#gebco').css('border-color','#0a48a3')
+        $('#osm').css('border-color','#0a48a3')
+        $('#gray').css('border-color','#0a48a3')
+        map.removeLayer(wmsLayerOSM)
+        map.removeLayer(wmsLayerdark)
+        map.removeLayer(wmsLayerGray)
+    });
+    
+
+    //MB OSM
+    var wmsSourceOSM = new ol.source.TileImage({
+        visible: true,
+        url: 'https://a.tile.openstreetmap.org/{z}/{x}/{y}.png'
+        });
+
+    var wmsLayerOSM = new  ol.layer.Tile({
+        source: wmsSourceOSM,
+        type: 'base',
+        visible: true,
+        zIndex: -1
+    });
+
+    $('#osm').click(function(){
+        map.addLayer(wmsLayerOSM)
+        $(this).css({'border-color':'#00c3ff','border-width':'3px'})
+        $('#gebco').css('border-color','#0a48a3')
+        $('#satelital').css('border-color','#0a48a3')
+        $('#gray').css('border-color','#0a48a3')
+        map.removeLayer(wmsLayersatel)
+        map.removeLayer(wmsLayerdark)
+        map.removeLayer(wmsLayerGray)
+        $('#gebcosimbology').html('')
+    });
+
+
+    //MB oscuro
+    var wmsSourcedark = new ol.source.TileImage({
+        visible: true,
+        url: 'http://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png'
+        });
+
+    var wmsLayerdark = new  ol.layer.Tile({
+        source: wmsSourcedark,
+        type: 'base',
+        visible: true,
+        zIndex: -2
+    });
+
+    $('#oscuro').click(function(){
+        map.addLayer(wmsLayerdark)
+        $(this).css('border-color','#ffffff')
+        map.removeLayer(wmsLayersatel)
+        map.removeLayer(wmsLayerOSM)
+        map.removeLayer(wmsLayerGray)
+    });
+    map.addLayer(wmsLayerdark);
+
+    $('#gebco').click(function(){
+        map.addLayer(wmsLayerdark)
+        $('#gebcosimbology').html('<img src="./img/Simbo/gebcom.png" id="gebcosim">')
+        $(this).css({'border-color':'#00c3ff','border-width':'3px'})
+        $('#osm').css('border-color','#0a48a3')
+        $('#satelital').css('border-color','#0a48a3')
+        $('#gray').css('border-color','#0a48a3')
+        map.removeLayer(wmsLayersatel)
+        map.removeLayer(wmsLayerOSM)
+        map.removeLayer(wmsLayerGray)
+    });
+
+
+    //Geocoder
+    const geocoder = new Geocoder('nominatim', {
+    provider: 'osm',
+    targetType: 'text-input',
+    lang: 'en',
+    placeholder: 'Busca un lugar...',
+    limit: 5,
+    keepOpen: false,
+    });
+
+    geocoder.on('addresschosen', function(evt){
+    var feature = evt.feature,
+        coord = evt.coordinate,
+        address = evt.address;
+    // some popup solution
+    content.innerHTML = '<p>'+ address.formatted +'</p>';
+    overlay.setPosition(coord);
+    });
+
+    
+    //Agregamos objetos al mapa	
+    map.addControl(scaleline);//Agregamos barra de esacala
+    map.addControl(geocoder);//Agregamos geocoder
+    map.addControl(mousePositionControl);
+
+    var fecha_1 = "{{ sargazoUltimo.fecha }}";
+    var fecha_2 = "{{ sargazoUltimo.fecha }}";
+    var fechasarg = "{{ sargazoUltimo.fecha }}";
+    var fechapaso = "{{ sargazoUltimo.fechaCatalogo}}";
+
+    </script>
+    </section>
+    
+    </body>
+</html>
+
+
+

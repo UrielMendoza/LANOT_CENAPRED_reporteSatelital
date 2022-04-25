@@ -1,0 +1,23 @@
+@charset "utf-8";
+*{
+    margin:0%;
+    padding:0%;
+    /* font-size: 18px; */
+}
+
+body{
+    background:rgb(103, 106, 107);
+    display: block;
+}
+
+h1{
+    background: #0a48a3;
+    color: #ffffff;
+    font-size: 1.5em;
+    text-align: center;
+    padding: 0.5em;
+}
+
+#sargazokm2{
+    height: 80%;
+}

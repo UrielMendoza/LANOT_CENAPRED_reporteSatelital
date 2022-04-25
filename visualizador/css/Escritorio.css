@@ -1,0 +1,961 @@
+@charset "utf-8";
+*{
+    margin:0%;
+    padding:0%;
+    font-size: 18px;
+}
+
+body{
+    background:white;
+    display: block;
+}
+
+
+
+/*header*/
+header{
+    width: 100%;
+    
+    
+}
+
+header nav{
+    /* background: rgb(37, 36, 36);
+    height: 65px; */
+
+    width: 30%;
+    height: calc(100% - 50px);
+    left: -100%;
+    margin:0;
+    position: absolute;
+    z-index: 4;
+    background: rgb(49, 45, 45);
+    
+    
+}
+
+.menu_bar{
+    /* display: none; */
+    display: block;
+    width: 100%;
+    padding: 10px 10px 2.5em 10px;
+    background:  linear-gradient(180deg, rgb(34, 32, 32),rgb(70, 66, 66)) ;
+    position: relative;
+    z-index: 4;
+    height: 50px;
+}
+
+
+
+header nav ul {
+    /* overflow: hidden; */
+    list-style: none;
+    
+       
+}
+header nav ul  li {
+    /* float: left; */
+    display: block;
+    border-bottom:1px solid rgba(255, 255, 255, 0.3);
+    
+}
+header nav ul li a{
+    color: white;
+    padding: 20px;
+    display: block;
+    text-decoration: none;
+    
+}
+
+header nav ul li p{
+    color: white;
+    padding: 20px;
+    display: block;
+    text-decoration: none;
+ 
+}
+
+header div.conten {
+    width: 25em;
+    left: 0;
+    height: 89%;
+    /* overflow: auto; */
+    /* padding: 0; */
+    color: #000000;
+    background-color: rgba(214, 206, 206, 0.7);
+    position: fixed;
+    z-index: 3;
+    border-color: #fff;
+    border-width: 2px;
+    border-style: solid;
+    
+}
+
+
+div.tab {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: black;
+    
+  }
+
+div.tab button{
+    padding: 14px 16px;
+    color: #ffff;
+    background-color:black;
+    border: none;
+    outline: none; 
+    transition: 0.3s;
+    float:left;
+    
+}
+div.tab button:hover {
+    background-color: rgb(116, 120, 122);
+    
+}
+div.tab button.active {
+    background-color: #00c3ff;
+}
+
+.tabcontent {
+    display: none;
+    padding: 6px 12px;
+    width: 100%;
+  }
+
+.fechas-actualizacion {
+    color: #2c332b;
+    font-weight: bold;
+    background-color: #fff;
+    border: 1px black solid;
+    border-radius: 1em;
+    opacity: 0.5;
+    padding: 0.4rem 0.7rem 0.4rem 0.7rem;
+    display: inline-block;
+}
+
+img.menu{
+    float: left;
+    filter: invert(1);
+}
+
+img.lanot{
+    float: left;
+    padding: 5px 0 0 20px;
+    
+}
+
+img.copernicus{
+    float: left;
+    /*padding: 5px 0 0 20px;*/
+    width: 6rem;
+    /* height: 5rem; */
+}
+
+header nav ul li img {
+    margin-right: 20px;
+    filter: invert(1);
+}
+
+header nav ul li a:hover, p:hover{
+    background: #0a48a3;
+    color: white;
+    text-decoration:none;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    transition: all 0.9s;
+    cursor: pointer;
+}
+
+header div.menu_map {
+    position: fixed;
+    z-index: 0;
+    display: inline-block;
+
+}
+
+header a#Sar{
+    font-size: 25px;
+    color: #ffffff;
+    font-family: Verdana;
+    padding: 1% 1% 1.5% 3%;
+    user-select: none;
+}
+
+/****************Recuadros h1********************/
+div#infolayer h1{
+    text-align: center;
+    font-family: Verdana;
+    background: #0a48a3;
+    font-size: 15px;
+    color: #ffff;
+    padding: 10px;
+    margin-bottom: 0;
+    border-top-right-radius:0.5em;
+    border-top-left-radius: 0.5em;
+} 
+div#Capas h1 , div#Simbologia h1, div#con h1{
+    text-align: center;
+    padding: 10px;
+    width: 26em;
+    font-family: Verdana;
+    background: #884d15;
+    font-size: 15px;
+    color: #ffff;
+    border-radius: 0.5em;
+}
+
+
+ 
+/****************************Wrapper***********************/
+#body-grapper{
+    background: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    z-index: 3;
+}
+
+
+
+/* Formato Principal*/
+#map{
+    position: absolute;
+    z-index: 0;
+	left: 0;
+    width: 100%;
+    top: 50px;
+	height: calc(100% - 50px);
+    
+}
+
+
+/********************** display de consulta **************************/
+
+div#con{
+    display: block;
+    position: absolute;
+    height: 90%;
+    overflow: auto;
+    user-select: none;
+}
+
+
+
+div#con .busqueda{
+    padding: 5px 0px 0px 10px;
+    margin-right: 10px;
+  
+}
+
+div#con input.botton-Buscar, div#con input.botton-ejecutar, #elegir, input.botton-Buscartc, input.botton-Buscarcatsargazo{
+    text-decoration:none;
+    font-weight: 600;
+    font-size: 15px;
+    color:#ffffff;
+    padding-top:6px;
+    padding-bottom:6px;
+    padding-left:40px;
+    padding-right:40px;
+    background-color: #00c3ff;
+    border-color: #fff;
+    border-width: 2px;
+    border-style: solid;
+    text-align: center;
+    object-position: center center;
+    margin-bottom: 10px;
+    width: 12em;
+    border-radius: 0.5em;
+    
+}
+
+div#con input{
+    /* background-color: #2a7586; */
+    background-color: rgb(255, 255, 255);
+    color:black;
+    border-color: black;
+    border-width: 2px;
+    border-style: solid;
+    margin: 0 auto;
+    width: 100%;
+}
+
+div#con label#label{
+    color: #000000;
+    font-size: 15px;
+    font-family: Verdana;
+    font-weight: bold;
+    text-align: left;
+    
+}
+
+div#con::-webkit-scrollbar {
+    width: 7px;
+    
+}
+
+div#con::-webkit-scrollbar-thumb {
+    background: #884d15;
+    border-radius: 5px;
+}
+
+
+
+/******************Infolayer****************/
+
+#infolayer{
+    position: absolute;
+    display: none;
+    height: 35%;
+    left: 20%;
+    z-index: 3;
+    bottom: 2em;
+    border: solid 1px #000000;
+    border-radius: 0.5em;
+    color: black;
+    /* width: 60em; */
+}
+
+
+/*****************Capas****************/
+
+
+div#Capas {
+    padding: 5px 10px;
+    height: 90%;
+    overflow: auto;
+    /* color: white; */
+    position: absolute;
+    user-select: none;
+}
+div#Capas::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+    
+}
+
+div#Capas::-webkit-scrollbar-thumb {
+    background: #884d15;
+    border-radius: 7px;
+}
+
+div#Capas p{
+    text-align: justify;
+    padding: 10px 4% 10px 4%;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 15px;
+    
+}
+
+#hycomcont{
+    padding-left: 1em;
+}
+
+/**********************************More info layers***********************/
+
+label.more{
+    position: relative;
+    float: right;
+    margin-right: 0.5em;
+    
+}
+label.more img{
+    /* filter: invert(1); */
+    width: 14px;
+}
+
+label.more input:checked img{
+    background: blue;
+}
+
+label.more input{
+    display: none;
+}
+
+#mis, #mil, #mie, #mitrue, #misar, #migoes, #micuad, #milinea, #mihycom, #mihycomvel{
+    font-size: 0.7em;
+    background: rgb(255, 255, 255, 0.5);
+    padding-left: 7px;
+    color: black;
+    border-radius: 0.5em;
+    margin-bottom: 0.5em;
+}
+/***************+*Mapa Base*************************/
+.BaseMap {
+    display: block;
+    position: absolute;
+    width: 24em;
+}
+
+
+.mapbase img{
+    margin: 15px;
+    border: 2px solid #8e96d8;
+    border-radius: 10px;
+    height: 60px;
+    width: 60px;
+}
+
+
+
+/*******************Info layers**************/
+#fig1{
+    position: absolute;
+    right: 3%;
+    z-index: 1;
+    filter: invert(1);
+    border: 2px solid transparent;
+    top:7.8em;;
+    background: white;
+    
+}
+
+#fig1 input{
+    display: none;
+}
+
+#fig1:hover{
+    border: 2px solid;
+    border-color: black;
+    border-radius: 5px;
+}
+
+/***************Info rectangulo y Distancia*************/
+.barraherra{
+    position: absolute;
+    right: 2%;
+    z-index: 1;
+    filter: invert(1);
+    border: 2px solid black;
+    border-radius: 0.5em;    
+    padding: 0.1em;
+    background: rgba(218, 219, 219,0.5);
+    
+}
+
+#herra{
+    top:9em;
+}
+
+#herra1{
+    top:16em;
+    z-index: 5;
+}
+#fig2,#fig3,#fig4,#fig5,#fig6,#fig7{
+    height: 34px;
+}
+#fig2 input, #fig3 input, #fig4 input,#fig5 input,#fig6 input,#fig7 input{
+    display: none;
+}   
+
+#fig2 img, #fig3 img, #fig4 img,#fig5 svg,#fig6 img,#fig7 img{
+    width: 32px;
+    padding: 0.2em;
+}
+
+#fig2:hover, #fig3:hover, #fig4:hover, #fig5:hover,#fig6:hover,#fig7:hover{
+    border: 1px solid;
+    border-color: black;
+    background: rgba(218, 219, 219);
+    border-radius: 5px;
+}
+
+#fig2 input:checked  + img, #fig3 input:checked  + img, #fig4 input:checked  + img,
+#fig5 input:checked  + svg, #fig6 input:checked  + img, #fig7 input:checked  + img {
+    border: 2px solid;
+    border-color: black;
+    border-radius: 5px;
+    border-radius: 5px;
+    background: rgba(218, 219, 219);
+}
+ #fig5 svg{
+     filter: invert(1);
+ }
+
+ #fig6, #fch6{
+     z-index:10;
+ }
+/********************Simbología**********************/
+
+#Simbologia{
+    position: absolute;
+    display: block;
+    overflow: auto;
+    height: 90%;
+}
+
+div#Simbologia::-webkit-scrollbar {
+    width: 7px;
+    
+}
+
+div#Simbologia::-webkit-scrollbar-thumb {
+    background: #0a48a3;
+    border-radius: 7px;
+}
+
+#gebcosimbology{
+    bottom: 5%;
+    z-index: 3;
+    position: absolute;
+    right: 0%;
+    width: 40%;
+
+}
+#gebcosimbology img{
+    width: 80%;
+    padding-left:1%;
+}
+/**************************imagen barras y flecha**********************/
+
+#icons img{
+    filter: invert(1);
+    z-index: 2;
+    width: 2.5em;
+    display: inline-block;
+    position: relative;
+    border-color: black;
+    padding: 1em 0.5em 4em 0.5em;
+    border-style: solid;
+    border-width: 2px;
+    border-left: none;
+    border-top-right-radius: 1.3em;
+    border-bottom-right-radius: 1.3em;
+    filter: invert(1);
+    background: rgb(218, 219, 219, 0.5);
+    left: 0;
+} 
+
+#icons{
+    position: absolute;
+    display: block;
+    left: 25em;
+}
+#icons img:hover{
+    border-top-right-radius: 1.3em;
+    border-bottom-right-radius: 1.3em;
+    background: #ffff;
+    
+
+}
+
+#fig img{
+    /* position: relative; */
+    left: -100%;
+    z-index: 1;
+    filter: invert(1);
+    border: 2px solid;
+    background: rgb(218, 219, 219, 0.5);
+    border-color: black;
+    border-left: none;
+    border-top-right-radius: 1.3em;
+    border-bottom-right-radius: 1.3em;
+    width: 2.5em;
+    display: inline-block;
+    padding: 1em 0.5em 10em 0.5em;
+    
+}
+#fig{
+    position: absolute;
+    display: block;
+    top: 4.5em;
+    left: -100%;
+   
+}
+
+#fig:hover{
+    border: 2px solid;
+    background: black;
+    border-top-right-radius: 1.3em;
+    border-bottom-right-radius: 1.3em;
+}
+ /*******************************Mouse-Position******************************/
+ #mouse-position{
+    background: rgb(37, 36, 36, 0.5);
+    color: #ffff;
+    z-index: 1;
+    position: absolute;
+    bottom: 1%;
+    right: 5%;
+    border: 2px solid white;
+    border-radius: 3px;
+    padding-left: 10px;
+    padding-right: 10px;
+ }
+/************************************iframe***********************************/
+
+iframe {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
+/************************** Preloader ************************/
+
+#preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    overflow: hidden;
+    background: #884d15;
+}
+
+#preloader img{
+    position: fixed;
+    top: calc(50% - 150px);
+    left: calc(50% - 150px);
+    width: 300px;
+}
+  #preloader:before {
+    content: "";
+    position: fixed;
+    top: calc(50% - 30px);
+    left: calc(50% - 30px);
+    border: 6px solid #2c332b;
+    border-top-color: #fff;
+    border-bottom-color: #fff;
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    -webkit-animation: animate-preloader 1s linear infinite;
+    animation: animate-preloader 1s linear infinite;
+  }
+  
+  @-webkit-keyframes animate-preloader {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  
+  @keyframes animate-preloader {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  /*******************Descarga Downloadpage*********************/
+
+  #downloadpage{
+    background: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    z-index: 10;
+  }
+
+  #downloadpage #salida{
+    padding: 0.2% 0.3% 0.2% 0.3%;
+    color: #ffff;
+    background: #0a48a3;
+    border-color: #fff;
+    border-width: 3px;
+    border-style: solid;
+    border-radius: 10px;
+    font-weight: bold;
+    z-index: 11;
+    top: 1em;
+    right: 2%;
+    position: fixed;
+    user-select: none;
+    cursor: pointer;
+    
+  }
+
+  .contenedor{
+    border-color:#0a48a3;
+    border-width: 3px;
+    border-style: solid;
+    background: #ffffff;
+    width: 40em;
+    height: 20em;
+    top: calc(50% - 10em);
+    left: calc(50% - 20em);
+    position: fixed;
+    border-radius: 1.3em;
+
+  }
+  .contenedor h1{
+    color: #ffff;
+    text-align: center;
+    font-size: 1.2em;
+    padding: 4%;
+    font-family: Verdana;
+    background:#0a48a3 ;
+    border-radius: 1em;
+  }
+
+  .contenedor p{
+      color: rgb(0, 0, 0);
+      text-align: center;
+      font-size: 1em;
+      padding: 3%;
+      font-family: Verdana;
+  }
+
+  .contenedor a{
+    border-color:#fff;
+    border-width: 3px;
+    border-style: solid;
+    background: #0a48a3;
+    width: 8em;
+    color: #ffff;
+    left: calc( 50% - 4em);
+    border-radius: 1em;
+    position: fixed;
+    text-align: center;
+    padding: 1% 0 1% 0;
+  }
+
+  /**********************************Medir******************************/
+
+  .ol-tooltip {
+    position: relative;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 4px;
+    color: white;
+    padding: 4px 8px;
+    opacity: 0.7;
+    white-space: nowrap;
+    font-size: 12px;
+    cursor: default;
+    user-select: none;
+  }
+  .ol-tooltip-measure {
+    opacity: 1;
+    font-weight: bold;
+  }
+  .ol-tooltip-static {
+    background-color: #ffcc33;
+    color: black;
+    border: 1px solid white;
+  }
+  .ol-tooltip-measure:before,
+  .ol-tooltip-static:before {
+    border-top: 6px solid rgba(0, 0, 0, 0.5);
+    border-right: 6px solid transparent;
+    border-left: 6px solid transparent;
+    content: "";
+    position: absolute;
+    bottom: -6px;
+    margin-left: -7px;
+    left: 50%;
+  }
+  .ol-tooltip-static:before {
+    border-top-color: #ffcc33;
+  }
+
+  .medir{
+    z-index: 2;
+    display: block;
+    position: fixed;
+    background: rgb(37, 36, 36, 0.5);;
+    right: -100%;
+    top: 9em;
+    text-align: center;
+    border: 2px solid #0a48a3;
+    border-radius: 0.4em;
+    color: #ffffff;
+    padding: 1em;
+    
+  }
+
+/************************************Área Select**************************************************/
+
+.areaSelect{
+    z-index: 2;
+    display: block;
+    position: fixed;
+    background: rgb(37, 36, 36, 0.5);
+    right: -100%;
+    top: 13em;
+    text-align: center;
+    border: 3px solid #ffffff;
+    border-radius: 0.4em;
+    color: #ffffff;
+    padding: 1em;
+    
+  }
+
+/*********************************************Popup*******************************************************/
+.ol-popup {
+    width: 30%;
+    height: 25em;  
+    position: fixed;
+    
+}
+table{
+    /* table-layout: relative; */
+    overflow: auto;
+    /* height: 100%; */
+    display:block;
+    z-index: 1;
+}
+.ol-popup h1 {
+    font-size: 1em;
+    background-size: 2em;
+    padding-left: 3em;
+    background: #0a48a3;
+    color: #ffffff;
+}
+
+.ol-popup td{
+    font-size: 0.7em;
+}
+
+button .ol-zoombt{
+    width: 5em;
+}
+
+.ol-popup .ol-popup-content {
+    overflow: auto;
+    height: 40%;
+}
+.ol-popupfeature{
+    width: 96%; 
+    height: 100%;
+    position: absolute;
+    /* padding-right: 10px; */
+}
+/*************************************************Tabla de Atributos**************************************/
+
+.tableprin{
+    /* table-layout: relative; */
+    overflow: auto;
+    /* position:relative; */
+    width: auto;
+    height: calc(100% - 38px);
+    user-select: none;
+    /* z-index: 1; */
+   
+}
+
+thead.tdark{
+    background: #000000;
+    color: #ffffff;   
+}
+
+table.tableprin th{
+    text-align: center;
+    font-size: 0.8em;
+    
+}
+
+table.tableprin td{
+    font-size: 0.6em;
+}
+table.tableprin th, td{
+    padding: 15px;
+    /* max-width: 8em; */
+}
+
+table.tableprin tbody{
+    background: #ffffff;
+    border-bottom-right-radius: 0.5em;
+    
+}
+
+/*******************************************Último paso***********************************/
+#ultimopaso{
+    z-index: 2;
+    display: block;
+    position: fixed;
+    background: rgb(37, 36, 36, 0.5);
+    right: 15em;
+    top: 3.6em;
+    text-align: center;
+    border: 3px solid #ffffff;
+    border-radius: 0.4em;
+    color: #ffffff;
+    padding: 0.5em; 
+    /* font-size:1rem; */
+    width: 15em;
+}
+
+circle{
+    display: inline-block;
+    fill: red;
+}
+
+
+/***************************************************Estadística*********************************************/
+
+.estadistica{
+    position: fixed;
+    width: 65%;
+    height: 45%;
+    border: 3px solid #ffffff;
+    z-index: 4;
+    display: none;
+    left: 17.5%;
+    top: 25%;
+}
+
+/* #date5, #date6{
+    
+    float: right;
+} */
+/**********************************************************************************************************/
+/******************************************media tableta***************************************************/
+/**********************************************************************************************************/
+
+@media screen and (max-width: 1064px) and (min-width: 100px){
+    header nav{
+        width: 40%;
+    }
+ 
+    header div.conten {
+     width: 20em;
+     left: 0;
+     height: 89%;
+     overflow: auto;
+     max-height: 730px;
+     color: white;
+     background-color: rgb(37, 36, 36, 0.7);
+     position: fixed;
+     z-index: 3;
+     border-color: #fff;
+     border-width: 2px;
+     border-style: solid;
+    } 
+
+    div.tab button{
+        width: 9.3em; 
+        transition: 0.3s;
+        float:left;
+        
+    }
+
+    #con{
+        width: 20em;
+    }
+
+    div#infolayer h1, div#Capas h1 , div#Simbologia h1, div#con h1{
+        width: 20em;
+    }
+
+    .BaseMap {
+        width: 19em;
+    }
+
+    #mapbase img{
+        margin: 20px;
+        border: 2px solid white;
+        border-radius: 10px;
+        height: 80px;
+        width: 80px;
+    }
+ } 
