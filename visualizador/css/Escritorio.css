@@ -152,6 +152,13 @@ img.copernicus{
     /* height: 5rem; */
 }
 
+img.cenapred{
+    float: left;
+    padding: 10px 0 0 20px;
+    width: 6rem;
+    /* height: 5rem; */
+}
+
 header nav ul li img {
     margin-right: 20px;
     filter: invert(1);
