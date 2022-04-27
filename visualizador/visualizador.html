@@ -117,6 +117,9 @@
                                 <input type="checkbox" id="sargazod" checked/>
                                 <label>Ceniza<div class="fechas-actualizacion" id="fecha-sargazo">Última detección {{ sargazoUltimo.fecha }}</div></label><label class="more"><input type="checkbox" id="moreinfos"><img src="./img/SVG/info_cir.svg"></label><br><div id="mis"></div>
                                 <b>Limites</b>
+                                <br>
+                                <input type="checkbox" id="zonas" checked/>
+                                <label>Zona de volcánes</label><label class="more"><input type="checkbox" id="moreinfos"><img src="./img/SVG/info_cir.svg"></label><br><div id="mis"></div>
                                
                             </div>
                             <div class="Raster">
@@ -407,6 +410,30 @@
     });
 
     // POPUP VOLCAN
+
+    // LIMITES
+    var wmsSource_zona = new ol.source.TileWMS({
+    visible: true,
+    url: 'http://132.247.103.145:8080/geoserver/reporte_satelital/wms',
+    params: {'LAYERS':'reporte_satelital:zonas_volcanes'},
+    serverType: 'geoserver',
+    });
+
+    var wmsLayer_zonas = new  ol.layer.Tile({
+        source: wmsSource_zona,
+        zIndex: 1.5
+    });
+    map.addLayer(wmsLayer_zonas);
+    $('#zonas').click(function(){
+        var imgest =  "static/img/Simbo/estados.png";
+        if($(this).is(':checked')){
+            map.addLayer(wmsLayer_zonas);
+            $('#imagen').append('<img src="'+imgest+'" class="imgest"/>');
+        } else {
+            map.removeLayer(wmsLayer_zonas);
+            $('img').remove('.TC_abi_FD_latest');
+        }
+    });   
 
     // CAPAS GOES-16
     var wmsSource_TC_abi_FD_latest = new ol.source.TileWMS({

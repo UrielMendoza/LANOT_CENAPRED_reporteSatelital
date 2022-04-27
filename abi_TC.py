@@ -38,8 +38,8 @@ def borra():
     os.remove('/var/tmp/tmp_geo.tif')    
     os.remove("/var/tmp/tmp_geo_fd.tif")
 
-def escribeDatos(sector,ultimo,dia,hora):
-   file = open("/data/tmp/latest/"+sector+"_date_latest.txt","w")
+def escribeDatos(pathOutput,sector,ultimo,dia,hora):
+   file = open(pathOutput+'/'+sector+"_date_latest.txt","w")
    file.write(ultimo+","+dia+","+hora)
    file.close()
 
@@ -57,26 +57,26 @@ def abiTC(pathInput,pathInput2,pathOutput):
     cuadrante_fires_ext = (-118,-58,6,34)
     cuadrante_a1 = (-129.791797,-50.19895,0.794,38.381128)
 
-    ultimo,diaU,horaU = revisaFecha(pathInput+"conus/")
-    ultimoFD,diaFD,horaFD = revisaFecha(pathInput+"fd/")
-    ultimoA1,diaA1,horaA1 = revisaFecha(pathInput+"a1/")
+    ultimo,diaU,horaU = revisaFecha(pathInput+"/conus/")
+    ultimoFD,diaFD,horaFD = revisaFecha(pathInput+"/fd/")
+    ultimoA1,diaA1,horaA1 = revisaFecha(pathInput+"/a1/")
 
-    escribeDatos("conus",ultimo,diaU,horaU)
-    escribeDatos("fd",ultimoFD,diaFD,horaFD)
+    escribeDatos(pathOutput,"conus",ultimo,diaU,horaU)
+    escribeDatos(pathOutput,"fd",ultimoFD,diaFD,horaFD)
 
-    reproyecta(pathInput2+"rgbconus/tmp.tif","tmp_geo")
-    reproyecta(pathInput2+"rgb/tmp.tif","tmp_geo_fd")
+    #reproyecta(pathInput2+"rgbconus/tmp.tif","tmp_geo")
+    #reproyecta(pathInput2+"rgb/tmp.tif","tmp_geo_fd")
 
-    recorta(pathOutput,cuadrante_mex,"/var/tmp/tmp_geo.tif","abi_TC_latest")
-    recorta(pathOutput,cuadrante_fires,"/var/tmp/tmp_geo_fd.tif","abi_TC_fires_latest")
+    #recorta(pathOutput,cuadrante_mex,"/var/tmp/tmp_geo.tif","abi_TC_latest")
+    #recorta(pathOutput,cuadrante_fires,"/var/tmp/tmp_geo_fd.tif","abi_TC_fires_latest")
 
     convierteVista(ultimoA1,pathOutput+"abi_TC_a1_latest.tif",cuadrante_a1)
     recorta(pathOutput,cuadrante_fires_ext,pathOutput+"abi_TC_a1_latest.tif","abi_FD_TC_fires_latest")
 
-    borra()
+    #borra()
     
-pathInput = "/data/goes16/abi/vistas/rgb/"
-pathInput2 = "/var/tmp/"
-pathOutput = '/data/tmp/latest/'
+pathInput = "/var/www/html/goes16/abi/vistas/rgb"
+pathTmp = "/home/lanotadm/data/tmp"
+pathOutput = '/home/lanotadm/data/latest'
 
-abiTC(pathInput,pathInput2,pathOutput)
+abiTC(pathInput,pathTmp,pathOutput)
