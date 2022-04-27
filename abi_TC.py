@@ -39,7 +39,7 @@ def borra():
     os.remove("/var/tmp/tmp_geo_fd.tif")
 
 def escribeDatos(pathOutput,sector,ultimo,dia,hora):
-   file = open(pathOutput+'/'+sector+"_date_latest.txt","w")
+   file = open(pathOutput+sector+"_date_latest.txt","w")
    file.write(ultimo+","+dia+","+hora)
    file.close()
 
@@ -57,9 +57,9 @@ def abiTC(pathInput,pathInput2,pathOutput):
     cuadrante_fires_ext = (-118,-58,6,34)
     cuadrante_a1 = (-129.791797,-50.19895,0.794,38.381128)
 
-    ultimo,diaU,horaU = revisaFecha(pathInput+"/conus/")
-    ultimoFD,diaFD,horaFD = revisaFecha(pathInput+"/fd/")
-    ultimoA1,diaA1,horaA1 = revisaFecha(pathInput+"/a1/")
+    ultimo,diaU,horaU = revisaFecha(pathInput+"conus/")
+    ultimoFD,diaFD,horaFD = revisaFecha(pathInput+"fd/")
+    ultimoA1,diaA1,horaA1 = revisaFecha(pathInput+"a1/")
 
     escribeDatos(pathOutput,"conus",ultimo,diaU,horaU)
     escribeDatos(pathOutput,"fd",ultimoFD,diaFD,horaFD)
@@ -76,8 +76,8 @@ def abiTC(pathInput,pathInput2,pathOutput):
 
     #borra()
     
-pathInput = "/var/www/html/goes16/abi/vistas/rgb"
-pathTmp = "/home/lanotadm/data/tmp"
-pathOutput = '/home/lanotadm/data/latest'
+pathInput = "/var/www/html/goes16/abi/vistas/rgb/"
+pathTmp = "/home/lanotadm/data/tmp/"
+pathOutput = '/home/lanotadm/data/latest/'
 
 abiTC(pathInput,pathTmp,pathOutput)
