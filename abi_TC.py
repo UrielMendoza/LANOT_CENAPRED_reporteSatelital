@@ -70,6 +70,7 @@ def abiTC(pathInput,pathInput2,pathOutput):
     #recorta(pathOutput,cuadrante_mex,"/var/tmp/tmp_geo.tif","abi_TC_latest")
     #recorta(pathOutput,cuadrante_fires,"/var/tmp/tmp_geo_fd.tif","abi_TC_fires_latest")
 
+    print(ultimoA1)
     convierteVista(ultimoA1,pathOutput+"abi_TC_a1_latest.tif",cuadrante_a1)
     recorta(pathOutput,cuadrante_fires_ext,pathOutput+"abi_TC_a1_latest.tif","abi_FD_TC_fires_latest")
 
