@@ -101,7 +101,7 @@ if len(tilesDirs) != 0:
         size = os.path.getsize(archivo)/1000000
         print('Tamaño:',size)
 
-        if size <= 100:
+        if size >= 100:
 
             print('Procesando: '+archivo)
             fecha = obtieneFecha(archivo)
