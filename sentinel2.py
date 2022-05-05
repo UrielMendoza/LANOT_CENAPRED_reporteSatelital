@@ -99,7 +99,7 @@ if len(tilesDirs) != 0:
         archivo = glob(tileDir+'/*')[0]
 
         size = os.path.getsize(archivo)
-        print('Tamaño:'+size)
+        print('Tamaño:',size)
 
         print('Procesando: '+archivo)
         fecha = obtieneFecha(archivo)
