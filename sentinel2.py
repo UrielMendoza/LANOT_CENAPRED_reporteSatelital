@@ -89,7 +89,7 @@ region = 'volcanes'
 bandas20m = ('B04','B8A','B12')
 tiles = base.tiles[region]
 #download_datasets.search_and_download_datasets(tiles, start_date, end_date, pathL2A, unzip=False)
-daysDelta = 3
+daysDelta = 2
 download_datasets.search_and_download_datasets(tiles, start_date - datetime.timedelta(days=daysDelta), end_date - datetime.timedelta(days=daysDelta), pathL2A, unzip=False)
 
 tilesDirs = glob(pathL2A+'*')
@@ -97,6 +97,9 @@ tilesDirs = glob(pathL2A+'*')
 if len(tilesDirs) != 0:
     for tileDir in tilesDirs:
         archivo = glob(tileDir+'/*')[0]
+
+        size = os.path.getsize(archivo)
+        print('Tamaño:'+size)
 
         print('Procesando: '+archivo)
         fecha = obtieneFecha(archivo)
