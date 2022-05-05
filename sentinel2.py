@@ -1,7 +1,7 @@
 import download_datasets
 import base
 import datetime
-from glob import glob
+from glob import escape, glob
 import os
 from osgeo import gdal,osr
 
@@ -70,10 +70,10 @@ def RGB(r,g,b,tile,pathOutputGeoTiff):
     nombre = pathOutputGeoTiff+'SWIR_'+tile+'_latest.tif'
     #os.system('gdal_merge.py -ot uint16 -a_nodata 0 -separate -co PHOTOMETRIC=RGB -o '+nombre+' '+r+' '+g+' '+b)
     os.system('gdalbuildvrt -separate stack.vrt '+r+' '+g+' '+b)
-    os.system('gdal_translate stack.vrt '+nombre)    
+    os.system('gdal_translate -of GTiff -ot Byte -scale 0 255 stack.vrt '+nombre)    
 
-def generaDate(pathLatest,fecha):
-    f = open('latest.csv','r')
+""" def generaDate(pathLatest,fecha):
+    f = open('latest.csv','r') """
 
 def escribeDatos(pathOutput,sector,ultimo,dia,hora):
     file = open(pathOutput+sector+"_date_latest.txt","w")
@@ -100,6 +100,9 @@ if len(tilesDirs) != 0:
 
         print('Procesando: '+archivo)
         fecha = obtieneFecha(archivo)
+        fechaStr = datetime.datetime.strptime('%Y%m%dT%H%M%S')
+        dia = fechaStr.strftime('%Y-%m-%d')
+        hora = fechaStr.strftime('%H:%M')
         fechaImaProc = obtieneFechaImaProc(archivo)
         tile = obtieneTile(archivo)
         anio = obtieneAnio(archivo)
@@ -120,6 +123,9 @@ if len(tilesDirs) != 0:
 
         RGB_TC('L2A','R20m',pathTmp+dirI,tile,pathLatest)
         RGB(r,g,b,tile,pathLatest)
+
+
+        escribeDatos(pathLatest,tile,archivo,dia,hora)
 
 
 os.system('rm -r '+pathTmp+'*')
