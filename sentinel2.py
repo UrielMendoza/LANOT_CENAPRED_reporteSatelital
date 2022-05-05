@@ -100,7 +100,7 @@ if len(tilesDirs) != 0:
 
         print('Procesando: '+archivo)
         fecha = obtieneFecha(archivo)
-        fechaStr = datetime.datetime.strptime('%Y%m%dT%H%M%S')
+        fechaStr = datetime.datetime.strptime(fecha,'%Y%m%dT%H%M%S')
         dia = fechaStr.strftime('%Y-%m-%d')
         hora = fechaStr.strftime('%H:%M')
         fechaImaProc = obtieneFechaImaProc(archivo)
