@@ -98,36 +98,41 @@ if len(tilesDirs) != 0:
     for tileDir in tilesDirs:
         archivo = glob(tileDir+'/*')[0]
 
-        size = os.path.getsize(archivo)
-        print('Tamaño:',size/1000000)
+        size = os.path.getsize(archivo)/1000000
+        print('Tamaño:',size)
 
-        print('Procesando: '+archivo)
-        fecha = obtieneFecha(archivo)
-        dia = fecha.split('T')[0]
-        hora = fecha.split('T')[1]
-        fechaImaProc = obtieneFechaImaProc(archivo)
-        tile = obtieneTile(archivo)
-        anio = obtieneAnio(archivo)
-        dirI = nomDir(archivo,'L2A')
+        if size <= 100:
 
-        print("Fecha: "+fecha)
-        print("Tile: "+tile)
+            print('Procesando: '+archivo)
+            fecha = obtieneFecha(archivo)
+            dia = fecha.split('T')[0]
+            hora = fecha.split('T')[1]
+            fechaImaProc = obtieneFechaImaProc(archivo)
+            tile = obtieneTile(archivo)
+            anio = obtieneAnio(archivo)
+            dirI = nomDir(archivo,'L2A')
 
-        descomprime(archivo,pathTmp)
+            print("Fecha: "+fecha)
+            print("Tile: "+tile)
 
-        for banda20 in bandas20m:
-            dirB20 = listaBandas(pathTmp+dirI,'L2A','R20m',banda20)
-            dsB20 = aperturaDS(dirB20)
-            imgToGeoTIF(dsB20,banda20,pathTmp)
-        r = pathTmp+bandas20m[2]+'.tif'
-        g = pathTmp+bandas20m[1]+'.tif'
-        b = pathTmp+bandas20m[0]+'.tif'
+            descomprime(archivo,pathTmp)
 
-        RGB_TC('L2A','R20m',pathTmp+dirI,tile,pathLatest)
-        RGB(r,g,b,tile,pathLatest)
+            for banda20 in bandas20m:
+                dirB20 = listaBandas(pathTmp+dirI,'L2A','R20m',banda20)
+                dsB20 = aperturaDS(dirB20)
+                imgToGeoTIF(dsB20,banda20,pathTmp)
+            r = pathTmp+bandas20m[2]+'.tif'
+            g = pathTmp+bandas20m[1]+'.tif'
+            b = pathTmp+bandas20m[0]+'.tif'
+
+            RGB_TC('L2A','R20m',pathTmp+dirI,tile,pathLatest)
+            RGB(r,g,b,tile,pathLatest)
 
 
-        escribeDatos(pathLatest,tile,archivo,dia,hora)
+            escribeDatos(pathLatest,tile,archivo,dia,hora)
+
+        else:
+            continue
 
 
 os.system('rm -r '+pathTmp+'*')
