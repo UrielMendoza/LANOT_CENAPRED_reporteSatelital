@@ -6,11 +6,34 @@ Created on Mon Jan 20 18:18:33 2020
 @author: urielm
 """
 
+from datetime import datetime
+#from abi_TC import convierteVista
 from osgeo import gdal,osr
 import numpy as np
 import os
 from glob import glob
+from PIL import Image, ImageDraw
+import aggdraw
 #import matplotlib.pyplot as plt
+
+
+def draw_text(im_in,x, y, text, align, bw=5):
+    draw = aggdraw.Draw(im_in)
+    p = aggdraw.Pen("white", 0.5)
+    b = aggdraw.Brush((0,0,0), 100)
+    white = (255, 255, 255)
+    font = aggdraw.Font(white, "/usr/share/fonts/truetype/ttf-bitstream-vera/VeraMono.ttf", 25)
+
+    p = aggdraw.Pen("white", 0.5)
+    b = aggdraw.Brush((0,0,0), 100)
+    title_sz =  draw.textsize(text, font)
+    if align == 1:
+        x -= title_sz[0]/2
+    elif align == 2:
+        x -= title_sz[0]
+    draw.rectangle((x-bw, y, x+title_sz[0]+bw, y+title_sz[1]), b, b) 
+    draw.text((x, y), text, font)
+    draw.flush()
 
 def normaliza(data):
     print ('Normalizando dato...')   
@@ -37,7 +60,7 @@ def creaTiff(data, ds, nombre):
     # Parametros para la creacion del TIFF por medio de GDAL
     nx = data.shape[1]
     ny = abs(data.shape[0])
-    dst_ds = gdal.GetDriverByName('GTiff').Create(nombre+'.tif', nx, ny, 1, gdal.GDT_Float32)
+    dst_ds = gdal.GetDriverByName('GTiff').Create(nombre+'.tif', nx, ny, 1, gdal.GDT_Byte)
     
     # Aplica la geotransformacion y la proyección
     dst_ds.SetGeoTransform(geotransform)    # Coordenadas especificas
@@ -60,7 +83,7 @@ def extraeArchivo(path,banda,region):
     if region == "conus":
     	archivos = glob(path+'*'+banda+'*')
     elif region == "fd":
-        archivos = glob(path+"*"+banda+"*gs*")
+        archivos = glob(path+"*"+banda+"*")
     archivos.sort()
     
     archivo = archivos[-1]
@@ -79,7 +102,11 @@ def extraeArchivo(path,banda,region):
     
     salida = '.'.join(map(str,salida3))
     
-    return archivo,salida
+    print(archivo.split('/')[-1].split('_'))
+    fechastr =  archivo.split('/')[-1].split('_')[0].split('-')[1]
+    #fecha = datetime.strptime('s%Y%J%H%M%S',fechastr)
+
+    return archivo,salida,fechastr
        
 
 
@@ -124,40 +151,41 @@ def recorta(banda,cuadrante):
     
     os.system('gdal_translate -projWin '+str(xmin)+' '+str(ymax)+' '+str(xmax)+' '+str(ymin)+' '+banda+'_geo.tif '+banda+'_rec.tif')
 
-def borra():
-    tempRGB = ('R','G','B','C0')    
-    for i in tempRGB:
-        temp = glob('./'+i+'*.tif')
-        for j in temp:
-            os.remove(j)    
+def borra(pathTmp):
+    #tempRGB = ('R','G','B','C0')    
+    #for i in tempRGB:
+    #    temp = glob(pathTmp+i+'*.tif')
+    #    for j in temp:
+    #        os.remove(j)  
+    os.system('rm '+pathTmp+'*')    
         
-def abiFT(pathInput,pathOutput,cuadrante,shape,region):
+def abiFT(pathInput,pathTmp,pathOutput,cuadrante,shape,region,regionrec):
         
     print('Extrayendo...') 
-    b7,salida7 = extraeArchivo(pathInput,'C07',region)
-    b6,salida6 = extraeArchivo(pathInput,'C06',region)
-    b5,salida5 = extraeArchivo(pathInput,'C05',region)
+    b7,salida7,fecha = extraeArchivo(pathInput,'C07',region)
+    b6,salida6,fecha = extraeArchivo(pathInput,'C06',region)
+    b5,salida5,fecha = extraeArchivo(pathInput,'C05',region)
     
     print('Remuestreando B5...')
     ds5,b = extrae(b5)
     ds7,r = extrae(b7)
     b = rebin(b,shape)
-    creaTiff(b,ds7,'C05_rem')
+    creaTiff(b,ds7,pathTmp+'C05_rem')
     
     print('Reproyectando...')
-    reproyecta(b7,'C07')
-    reproyecta(b6,'C06')
-    reproyecta('C05_rem.tif','C05')
+    reproyecta(b7,pathTmp+'C07')
+    reproyecta(b6,pathTmp+'C06')
+    reproyecta(pathTmp+'C05_rem.tif',pathTmp+'C05')
     
     print('Recortando...')
-    recorta('C07',cuadrante)
-    recorta('C06',cuadrante)
-    recorta('C05',cuadrante)
+    recorta(pathTmp+'C07',cuadrante)
+    recorta(pathTmp+'C06',cuadrante)
+    recorta(pathTmp+'C05',cuadrante)
     
     print('Obteniendo FT...')
-    ds7,r = extrae('C07_rec.tif')
-    ds6,g = extrae('C06_rec.tif')
-    ds5,b = extrae('C05_rec.tif')
+    ds7,r = extrae(pathTmp+'C07_rec.tif')
+    ds6,g = extrae(pathTmp+'C06_rec.tif')
+    ds5,b = extrae(pathTmp+'C05_rec.tif')
     print(r.shape)
     print(g.shape)
     print(b.shape)
@@ -165,29 +193,80 @@ def abiFT(pathInput,pathOutput,cuadrante,shape,region):
     r,g,b,rmask = ftABI(r,g,b,(300,325))
     
     print('Creando GTiff...')
-    creaTiff(r,ds7,'R')
-    creaTiff(g,ds7,'G')
-    creaTiff(b,ds7,'B')
+    creaTiff(r,ds7,pathTmp+'R')
+    creaTiff(g,ds7,pathTmp+'G')
+    creaTiff(b,ds7,pathTmp+'B')
     
+    #fechaName = fecha.strptime('%Y.%m%d.%H%M')
+    name = 'goes16.abi-'+fecha+'-fire-'+regionrec+'.tif'
+    namepng = 'goes16.abi-'+fecha+'-fire-'+regionrec+'.png'
+    namejpg = 'goes16.abi-'+fecha+'-fire-'+regionrec+'.jpg'
+
     print('Compuesto RGB...')    
-    os.system('gdal_merge.py -separate -co PHOTOMETRIC=RGB -o '+pathOutput+salida6[:-7]+".tif"+' R.tif G.tif B.tif')    
+    os.system('gdal_merge.py -separate -co PHOTOMETRIC=RGB -o '+pathTmp+name+' '+pathTmp+'R.tif '+pathTmp+'G.tif '+pathTmp+'B.tif')    
+    #os.system('gdal_translate '+pathTmp+name+' '+pathTmp+namepng)
+    os.system('gdal_translate '+pathTmp+name+' '+pathTmp+namejpg)
+
+    pathLanot = '/usr/local/share/lanot/'
+    im_in = Image.open(pathTmp+namejpg)
+    height = 1200
+    width = int(height * im_in.width / im_in.height)
+    im_in = im_in.resize((width, height)).convert('RGB')
+    logo = Image.open(pathLanot + '/logos/lanot_negro_sn.jpg')
+    w = 200
+    h = int(w * logo.height / logo.width)
+    logo = logo.resize((w, h))
+    im_in.paste(logo, (10, 10))
+
+    print(fecha)
+    fechaVista = datetime.strptime(fecha,'%Y.%m%d.%H%M')
+    fechaStr = 'GOES-16/ABI fire temperature '+fechaVista.strftime('%Y/%m/%d %H:%MZ')
+    draw_text(im_in, im_in.width-15, im_in.height - 40, fechaStr, 2)
+    im_in.save(pathTmp+namejpg)  
+
+
+    os.system('cp '+pathTmp+namejpg+' '+pathOutput)
     #os.system('cp '+pathOutput+salida6+' /data2/tmp/latest/')
     #os.system('mv /data2/tmp/latest/'+salida6+' /data2/tmp/latest/abi_FT_latest.tif')   
  
-    borra()
+    borra(pathTmp)
+
+    return namejpg
     
 
-pathInput = '/data/goes16/abi/l2/geotiff/cmi/conus/'
-pathOutput = '/data/goes16/abi/vistas/fire/conus/'
-cuadrante_conus = (-118,-85,15,33.5)
-shape_conus = [1500,2500]
-abiFT(pathInput,pathOutput,cuadrante_conus,shape_conus,"conus")
+def convierteVista(pathInput,pathOutput,cuadrante):
+    xmin = cuadrante[0]
+    xmax = cuadrante[1]
+    ymin = cuadrante[2]
+    ymax = cuadrante[3] 
+    
+    os.system("gdal_translate -a_ullr "+str(xmin)+' '+str(ymax)+' '+str(xmax)+' '+str(ymin)+" -a_srs EPSG:4326 "+pathInput+" "+pathOutput)
+
+#pathInput = '/data/goes16/abi/l2/geotiff/cmi/conus/'
+#pathOutput = '/data/goes16/abi/vistas/fire/conus/'
+#cuadrante_conus = (-118,-85,15,33.5)
+#shape_conus = [1500,2500]
+#abiFT(pathInput,pathOutput,cuadrante_conus,shape_conus,"conus")
+
+pathTmp = '/home/lanotadm/data/tmp/abi_FT_latest/'
+pathOutput = '/home/lanotadm/data/latest/'
+
+pathInput_a1 = "/data/goes16/abi/l2/geotiff/cmi/fd/"
+pathOutput_a1 = "/dataservice/goes16/abi/vistas/fire/"
+#cuadrante_fires = (-117.6,-58.5,6.5,33.6)
+cuadrante_a1 = (-129.791797,-50.19895,0.794,38.381128)
+#cuadrante_a1 = (-129.791797,-50.19895,0.794,38.381128)
+shape_fd = [5424,5424]
+name = abiFT(pathInput_a1,pathTmp,pathOutput_a1,cuadrante_a1,shape_fd,"fd",'a1')
+convierteVista(pathOutput_a1+name,pathOutput+"abi_FT_a1_latest.tif",cuadrante_a1)
+
 
 pathInput_fires = "/data/goes16/abi/l2/geotiff/cmi/fd/"
-pathOutput_fires = "/data/goes16/abi/vistas/fire/mexico_caribe/"
+pathOutput_fires = "/dataservice/goes16/abi/vistas/fire/"
 #cuadrante_fires = (-117.6,-58.5,6.5,33.6)
 cuadrante_fires_ext = (-118,-58,6,34)
 #cuadrante_a1 = (-129.791797,-50.19895,0.794,38.381128)
 shape_fd = [5424,5424]
-abiFT(pathInput_fires,pathOutput_fires,cuadrante_fires_ext,shape_fd,"fd")
+name = abiFT(pathInput_fires,pathTmp,pathOutput_fires,cuadrante_fires_ext,shape_fd,"fd",'fires')
+#convierteVista(pathOutput_fires+name,pathOutput+"abi_FT_fires_latest.tif",cuadrante_fires_ext)
  

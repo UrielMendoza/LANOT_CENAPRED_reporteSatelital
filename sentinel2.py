@@ -75,6 +75,11 @@ def RGB(r,g,b,tile,pathOutputGeoTiff):
 def generaDate(pathLatest,fecha):
     f = open('latest.csv','r')
 
+def escribeDatos(pathOutput,sector,ultimo,dia,hora):
+    file = open(pathOutput+sector+"_date_latest.txt","w")
+    file.write(ultimo+","+dia+","+hora)
+    file.close()
+
 pathL2A = '/home/lanotadm/data/LANOT_CENAPRED_reporteSatelital/sentinel2/L2A/'
 pathLatest = '/home/lanotadm/data/LANOT_CENAPRED_reporteSatelital/sentinel2/latest/'
 pathTmp = '/home/lanotadm/data/LANOT_CENAPRED_reporteSatelital/sentinel2/tmp/'
@@ -84,7 +89,7 @@ region = 'volcanes'
 bandas20m = ('B04','B8A','B12')
 tiles = base.tiles[region]
 #download_datasets.search_and_download_datasets(tiles, start_date, end_date, pathL2A, unzip=False)
-daysDelta = 2
+daysDelta = 0
 download_datasets.search_and_download_datasets(tiles, start_date - datetime.timedelta(days=daysDelta), end_date - datetime.timedelta(days=daysDelta), pathL2A, unzip=False)
 
 tilesDirs = glob(pathL2A+'*')
@@ -115,6 +120,7 @@ if len(tilesDirs) != 0:
 
         RGB_TC('L2A','R20m',pathTmp+dirI,tile,pathLatest)
         RGB(r,g,b,tile,pathLatest)
+
 
 os.system('rm -r '+pathTmp+'*')
 os.system('rm -r '+pathL2A+'*')

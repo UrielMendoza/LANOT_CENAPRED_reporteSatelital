@@ -34,9 +34,8 @@ def recorta(pathOutput,cuadrante,tmp,latest):
     
     os.system('gdal_translate -projWin '+str(xmin)+' '+str(ymax)+' '+str(xmax)+' '+str(ymin)+" "+tmp+" "+pathOutput+latest+".tif")
 
-def borra():
-    os.remove('/var/tmp/tmp_geo.tif')    
-    os.remove("/var/tmp/tmp_geo_fd.tif")
+def borra(pathTmp):
+    os.system('rm '+pathTmp+'*')   
 
 def escribeDatos(pathOutput,sector,ultimo,dia,hora):
    file = open(pathOutput+sector+"_date_latest.txt","w")
@@ -72,12 +71,12 @@ def abiTC(pathInput,pathInput2,pathOutput):
 
     print(ultimoA1)
     convierteVista(ultimoA1,pathOutput+"abi_TC_a1_latest.tif",cuadrante_a1)
-    recorta(pathOutput,cuadrante_fires_ext,pathOutput+"abi_TC_a1_latest.tif","abi_FD_TC_fires_latest")
+    #recorta(pathOutput,cuadrante_fires_ext,pathOutput+"abi_TC_a1_latest.tif","abi_FD_TC_fires_latest")
 
-    #borra()
+    borra(pathTmp)
     
-pathInput = "/var/www/html/goes16/abi/vistas/rgb/"
-pathTmp = "/home/lanotadm/data/tmp/"
+pathInput = "/dataservice/goes16/abi/vistas/rgb/"
+pathTmp = "/home/lanotadm/data/tmp/abi_TC_latest/"
 pathOutput = '/home/lanotadm/data/latest/'
 
 abiTC(pathInput,pathTmp,pathOutput)

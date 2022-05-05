@@ -12,7 +12,12 @@ Created on Wed Jan 29 17:21:12 2020
 #import matplotlib.pyplot as plt
 import os
 from glob import glob
+from datetime import datetime
 
+def escribeDatos(pathOutput,sector,ultimo,dia,hora):
+   file = open(pathOutput+sector+"_date_latest.txt","w")
+   file.write(ultimo+","+dia+","+hora)
+   file.close()
 
 def comparaPaso(path):
     archivos = glob(path+'*CVIIRSM*')
@@ -74,7 +79,20 @@ def recortaPaso1(pathInput,pathOutput,salida):
 
 def paso1(pathInput,pathOutput,salida):
     archivo = extraeArchivo(pathInput,1)
+
     recortaPaso1(archivo,pathOutput,salida+'.tif')
+
+
+    fechadia = archivo.split('/')[-1].split('.')[1].split('_')[0]
+    fechadia = datetime.strptime(fechadia,'d%Y%m%d')
+    dia = fechadia.strftime('%Y-%m-%d')
+    fechahora = archivo.split('/')[-1].split('.')[1].split('_')[1]
+    print(fechahora)
+    fechahora = datetime.strptime(fechahora,'t%H%M%S%f')
+    hora = fechahora.strftime('%H:%M')
+
+    escribeDatos(pathOutput,'viirsTC',archivo,dia,hora)
+
       
 
 def borra(salida):
@@ -105,6 +123,16 @@ def paso2(pathInput,pathOutput,salida):
     
     unionPaso2(pathOutput,'viirs_TC_latest')
 
+    fechadia = archivo1.split('/')[-1].split('.')[1].split('_')[0]
+    fechadia = datetime.strptime(fechadia,'d%Y%m%d')
+    dia = fechadia.strftime('%Y-%m-%d')
+    fechahora = archivo1.split('/')[-1].split('.')[1].split('_')[1]
+    print(fechahora)
+    fechahora = datetime.strptime(fechahora,'t%H%M%S%f')
+    hora = fechahora.strftime('%H:M')
+        
+    escribeDatos(pathOutput,'viirsTC',archivo1+' '+archivo2,dia,hora)
+
 def viirsTC(pathInput,pathOutput):
     paso = comparaPaso(pathInput)
  	
@@ -120,7 +148,7 @@ def viirsTC(pathInput,pathOutput):
     else:
         print('No hay archivos')
     
-pathInput = '/data2/output/polar/jpss1/viirs/level2/vistas/cviirs/'
-pathOutput = '/data/tmp/latest/'
+pathInput = '/data/output/npp_jpss/viirs/vistas/cviirs/'
+pathOutput = '/home/lanotadm/data/latest/'
 
 viirsTC(pathInput,pathOutput)

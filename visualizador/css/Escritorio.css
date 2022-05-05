@@ -145,6 +145,20 @@ img.lanot{
     
 }
 
+img.nasa {
+    float: left;
+    padding-left: 1rem;
+    width: 3.5rem;
+    /* height: 5rem; */
+}
+
+img.noaa {
+    float: left;
+    /*padding: 5px 0 0 20px;*/
+    width: 2rem;
+    /* height: 5rem; */
+}
+
 img.copernicus{
     float: left;
     /*padding: 5px 0 0 20px;*/
@@ -623,7 +637,7 @@ iframe {
     position: fixed;
     top: calc(50% - 30px);
     left: calc(50% - 30px);
-    border: 6px solid #2c332b;
+    border: 6px solid #884d15;
     border-top-color: #fff;
     border-bottom-color: #fff;
     border-radius: 50%;

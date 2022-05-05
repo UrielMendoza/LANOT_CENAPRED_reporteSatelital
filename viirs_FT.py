@@ -140,9 +140,9 @@ def creaTiffPaso2(path12,path11,path10,paso):
         
     r,g,b,rmask = ftVIIRS(r,g,b,(305,325))
     
-    creaTiff(r, ds12, 'R'+str(paso+1))
-    creaTiff(g, ds11, 'G'+str(paso+1))
-    creaTiff(b, ds10, 'B'+str(paso+1))
+    creaTiff(r, ds12, pathTmp+'R'+str(paso+1))
+    creaTiff(g, ds11, pathTmp+'G'+str(paso+1))
+    creaTiff(b, ds10, pathTmp+'B'+str(paso+1))
 
 def recortaPaso2(banda,paso):
     
@@ -161,62 +161,62 @@ def unionPaso2(banda):
     
     os.system('gdal_merge.py -o '+banda+'.tif '+banda+'2_rec.tif '+banda+'1_rec.tif')
 
-def borra(paso):
+def borra(pathTmp,paso):
     tempRGB = ('R','G','B')    
     for i in tempRGB:
-        temp = glob('./'+i+'*.tif')
+        temp = glob(pathTmp+i+'*.tif')
         for j in temp:
             os.remove(j)
     if paso == 1:
-        os.remove('rgb.tif')
+        os.remove(pathTmp+'rgb.tif')
     
-def paso2(path12,path11,path10,pathOutput,salida):
+def paso2(path12,path11,path10,pathOutput,salida,pathTmp):
     
     creaTiffPaso2(path12,path11,path10,0)
     creaTiffPaso2(path12,path11,path10,1)
      
-    recortaPaso2('R1',1)
-    recortaPaso2('G1',1)
-    recortaPaso2('B1',1)
+    recortaPaso2(pathTmp+'R1',1)
+    recortaPaso2(pathTmp+'G1',1)
+    recortaPaso2(pathTmp+'B1',1)
     
-    recortaPaso2('R2',2)
-    recortaPaso2('G2',2)
-    recortaPaso2('B2',2)
+    recortaPaso2(pathTmp+'R2',2)
+    recortaPaso2(pathTmp+'G2',2)
+    recortaPaso2(pathTmp+'B2',2)
     
-    unionPaso2('R')
-    unionPaso2('G')
-    unionPaso2('B')
+    unionPaso2(pathTmp+'R')
+    unionPaso2(pathTmp+'G')
+    unionPaso2(pathTmp+'B')
     
-    os.system('gdal_merge.py -separate -co PHOTOMETRIC=RGB -o '+pathOutput+salida+' R.tif G.tif B.tif')
+    os.system('gdal_merge.py -separate -co PHOTOMETRIC=RGB -o '+pathOutput+salida+' '+pathTmp+'R.tif '+pathTmp+'G.tif '+pathTmp+'B.tif')
     
-def recortaPaso1(pathOutput,salida):
+def recortaPaso1(pathOutput,salida,pathTmp):
     
     xmin = -118
     xmax = -85
     ymin = 12
     ymax = 33.5
     
-    os.system('gdal_translate -projWin '+str(xmin)+' '+str(ymax)+' '+str(xmax)+' '+str(ymin)+' rgb.tif '+pathOutput+salida)
+    os.system('gdal_translate -projWin '+str(xmin)+' '+str(ymax)+' '+str(xmax)+' '+str(ymin)+' '+pathTmp+'rgb.tif '+pathOutput+salida)
 
-def paso1(path12,path11,path10,pathOutput,salida):
+def paso1(path12,path11,path10,pathOutput,salida,pathTmp):
     ds12,r = extrae(path12)
     ds11,g = extrae(path11)
     ds10,b = extrae(path10)
         
     r,g,b,rmask = ftVIIRS(r,g,b,(310,325))
     
-    creaTiff(r, ds12, 'R')
-    creaTiff(g, ds11, 'G')
-    creaTiff(b, ds10, 'B')
+    creaTiff(r, ds12, pathTmp+'R')
+    creaTiff(g, ds11, pathTmp+'G')
+    creaTiff(b, ds10, pathTmp+'B')
     
     #rgb = compuestoRGB(r,g,b,True)
     
     #plt.figure(figsize=(20,20))
     #plt.imshow(rgb)
     
-    os.system('gdal_merge.py -separate -co PHOTOMETRIC=RGB -o rgb.tif R.tif G.tif B.tif')
+    os.system('gdal_merge.py -separate -co PHOTOMETRIC=RGB -o '+pathTmp+'rgb.tif '+pathTmp+'R.tif '+pathTmp+'G.tif '+pathTmp+'B.tif')
     
-    recortaPaso1(pathOutput,salida)
+    recortaPaso1(pathOutput,salida,pathTmp)
     
     return 
 
@@ -274,29 +274,29 @@ def extraeArchivo(path,banda,paso):
         
         return archivo1,archivo2,salida
 
-def viirsFT(pathInput,pathOutput):
-    paso = comparaPaso(pathInput,'m12')
+def viirsFT(pathInput,pathOutput,pathTmp):
+    paso = comparaPaso(pathInput,'m12_2')
    
     print(paso) 
    
     if paso == 1:
         print('1 PASO VIIRS..')
-        b10,salida = extraeArchivo(pathInput,'m10',paso)
-        b11,salida = extraeArchivo(pathInput,'m11',paso)
-        b12,salida = extraeArchivo(pathInput,'m12',paso)
+        b10,salida = extraeArchivo(pathInput,'m10_2',paso)
+        b11,salida = extraeArchivo(pathInput,'m11_2',paso)
+        b12,salida = extraeArchivo(pathInput,'m12_2',paso)
 
         print(b10)
         print(b11)
         print(b12)
         
-        paso1(b12,b11,b10,pathOutput,salida)
-        borra(paso)
+        paso1(b12,b11,b10,pathOutput,salida,pathTmp)
+        borra(pathTmp,paso)
 
     elif paso == 2:
         print('2 PASOS VIIRS..')
-        b10_1,b10_2,salida = extraeArchivo(pathInput,'m10',paso)    
-        b11_1,b11_2,salida = extraeArchivo(pathInput,'m11',paso)
-        b12_1,b12_2,salida = extraeArchivo(pathInput,'m12',paso)
+        b10_1,b10_2,salida = extraeArchivo(pathInput,'m10_2',paso)    
+        b11_1,b11_2,salida = extraeArchivo(pathInput,'m11_2',paso)
+        b12_1,b12_2,salida = extraeArchivo(pathInput,'m12_2',paso)
     
         b10 = [b10_1,b10_2]
         b11 = [b11_1,b11_2]
@@ -306,13 +306,14 @@ def viirsFT(pathInput,pathOutput):
         print(b11)
         print(b12)
         
-        paso2(b12,b11,b10,pathOutput,salida)
-        borra(paso)
+        paso2(b12,b11,b10,pathOutput,salida,pathTmp)
+        borra(pathTmp,paso)
     
     else:
         print('No hay archivos')
 
         
-pathInput = '/data2/output/polar/jpss1/viirs/level1/geotiff/whole_pass/'
-pathOutput = '/data2/output/polar/jpss1/viirs/level2/vistas/fire/'
-viirsFT(pathInput,pathOutput)
+pathInput = '/data/output/npp_jpss/viirs/level1/'
+pathOutput = '/home/lanotadm/data/latest/'
+pathTmp = '/home/lanotadm/data/latest/tmp/viirs_FT/'
+viirsFT(pathInput,pathOutput,pathTmp)

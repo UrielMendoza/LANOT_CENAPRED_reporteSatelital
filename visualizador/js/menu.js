@@ -26,12 +26,12 @@ function main(){
 
 function maxdate(){
     //Fecha máxima de consulta en puntos de calor. 
-    date3.max = new Date().toISOString().split("T")[0];
+/*     date3.max = new Date().toISOString().split("T")[0];
     date4.max = new Date().toISOString().split("T")[0];
     date5.value = fechapaso;
     date5.max = fechapaso;
     date6.value = fechapaso;
-    date6.max = fechapaso;
+    date6.max = fechapaso; */
 
     
 }

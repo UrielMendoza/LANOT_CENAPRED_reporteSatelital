@@ -42,8 +42,10 @@
         <div id="preloader"><img src="./img/lanot_logo_b_1.png"></div>
         <header>	
             <div class="menu_bar">
-                <a><img src="./img/32px/190-menu.png" class="menu"></a>                
-                <a href="https://www.gob.mx/cenapred"><img src="./img/copernicus_b.png" class="copernicus"></a>
+                <a><img src="./img/32px/190-menu.png" class="menu"></a>  
+                <a href="https://www.nasa.gov/"><img src="./img/nasa.png" class="nasa"></a>
+                <a href="https://www.noaa.gov/"><img src="./img/noaa_logo.png" class="noaa"></a>   
+                <a href="https://www.copernicus.eu/es"><img src="./img/copernicus_b.png" class="copernicus"></a>
                 <a href="/lanot/"><img src="./img/lanot_logo_b.png" class="lanot"></a>
                 <a href="https://www.gob.mx/cenapred"><img src="./img/cenapred.png" class="cenapred"></a>
                 <a id=Sar>Visualizador de Ceniza Volcánica</a>
@@ -115,11 +117,14 @@
                                 <b>Datos</b>
                                 <br>
                                 <input type="checkbox" id="sargazod" checked/>
-                                <label>Ceniza<div class="fechas-actualizacion" id="fecha-sargazo">Última detección {{ sargazoUltimo.fecha }}</div></label><label class="more"><input type="checkbox" id="moreinfos"><img src="./img/SVG/info_cir.svg"></label><br><div id="mis"></div>
+                                <label>Ceniza<div class="fechas-actualizacion" id="fecha-sargazo">Última detección {{ cenizaUltimo.fecha }}</div></label><label class="more"><input type="checkbox" id="moreinfos"><img src="./img/SVG/info_cir.svg"></label><br><div id="mis"></div>
                                 <b>Limites</b>
                                 <br>
                                 <input type="checkbox" id="zonas" checked/>
                                 <label>Zona de volcánes</label><label class="more"><input type="checkbox" id="moreinfos"><img src="./img/SVG/info_cir.svg"></label><br><div id="mis"></div>
+                                <br>
+                                <input type="checkbox" id="coast" checked/>
+                                <label>Límite de costa y estatal</label><label class="more"><input type="checkbox" id="moreinfos"><img src="./img/SVG/info_cir.svg"></label><br><div id="mis"></div>
                                
                             </div>
                             <div class="Raster">
@@ -148,10 +153,18 @@
                                 <input type="checkbox" id="SWIR_T15QVV_latest" value="1" checked/>
                                 <label for="check1">Chichon</label><br>
 
+                                <b>NOAA-20/VIIRS</b>
+                                <br>
+                                <input type="checkbox" id="TC_viirs_latest" value="1" checked/>
+                                <label for="check1">TC</label><br>
+
                                 <b>Goes-16/ABI</b>
                                 <br>
                                 <input type="checkbox" id="TC_abi_FD_latest" value="1" checked/>
-                                <label for="check1">Color Verdadero en día + Banda 13 (10.3 µm) en la noche</label><br>
+                                <label for="check1">TC en día + Banda 13 (10.3 µm) en la noche</label><br>
+                                <br>
+                                <input type="checkbox" id="FT_abi_FD_latest" value="1"/>
+                                <label for="check1">Fire Temperature (B07,B06,B05)</label><br>
 
                             </div>
                             <div class="BaseMap">
@@ -165,9 +178,9 @@
                                 <label class="mapbase">
                                     <abrr title="Esri Gray (light)"><img src="./img/gray.PNG"  id="gray"></abrr><br>                                
                                 </label>
-                                <label class="mapbase">
+<!--                                 <label class="mapbase">
                                     <abrr title="Map Box (dark)"><img src="./img/gebco.PNG"  id="gebco"></abrr><br>                                
-                                </label>
+                                </label> -->
                                 
                             </div>
                         </div>
@@ -197,7 +210,7 @@
         </div>
     </div>
     <div id="mouse-position"></div>
-    <div id="gebcosimbology"></div>
+<!--     <div id="gebcosimbology"></div> -->
     
     <div id="infolayer" >
         <h1>Tabla de atributos de los polígonos de sargazo</h1>
@@ -274,14 +287,14 @@
           </form>
     </div>
     
-    <div id="ultimopaso">
+<!--     <div id="ultimopaso">
         <label>Último paso Sentinel-2:</label>
         <label>{{ sargazoUltimo.fechaCatalogo }}</label><br>
         <abrr title="No hubo detección de sargazo"><svg version="1.1" xmlns="http://www.w3.org/2000/svg"
             width="30" height="30">
         <circle cx="15" cy="15" r="15">
         </svg></abbr>
-    </div>
+    </div> -->
     
     
     <script>
@@ -295,8 +308,8 @@
     var map = new ol.Map({//Abrimos mapa
         target: 'map',
         view: new ol.View({//Creamos vista del mapa
-            center: ol.proj.transform([-102, 19],'EPSG:4326', 'EPSG:3857'),//Cambiamos proyección a WGS84
-            zoom: 6,
+            center: ol.proj.transform([-94, 21],'EPSG:4326', 'EPSG:3857'),//Cambiamos proyección a WGS84
+            zoom: 4.5,
             //minZoom: 7.5,
             //maxZoom: 22,
             //extent: ol.proj.transformExtent([-93, 15, -81, 25], 'EPSG:4326','EPSG:3857')
@@ -388,7 +401,6 @@
             anchorYUnits: 'pixels',
             scale: 0.09,
             opacity: 0.7,
-            zIndex: 1,
             src: './img/volcan.png'
         }))
     });
@@ -396,7 +408,8 @@
 
     var vecLayer = new ol.layer.Vector({
     source: vecSource,
-    style: iconStyle
+    style: iconStyle,
+    zIndex: 2.0,
     });
     
     map.addLayer(vecLayer); 
@@ -421,16 +434,40 @@
 
     var wmsLayer_zonas = new  ol.layer.Tile({
         source: wmsSource_zona,
-        zIndex: 1.5
+        zIndex: 2.0
     });
     map.addLayer(wmsLayer_zonas);
     $('#zonas').click(function(){
-        var imgest =  "static/img/Simbo/estados.png";
+        var imgest =  "./img/Simbo/estados.png";
         if($(this).is(':checked')){
             map.addLayer(wmsLayer_zonas);
             $('#imagen').append('<img src="'+imgest+'" class="imgest"/>');
         } else {
             map.removeLayer(wmsLayer_zonas);
+            $('img').remove('.TC_abi_FD_latest');
+        }
+    });   
+
+
+    var wmsSource_coast = new ol.source.TileWMS({
+    visible: true,
+    url: 'http://132.247.103.145:8080/geoserver/DGRU_LANOT/wms',
+    params: {'LAYERS':'DGRU_LANOT:coastline_mexicoMerc'},
+    serverType: 'geoserver',
+    });
+
+    var wmsLayer_coast = new  ol.layer.Tile({
+        source: wmsSource_coast,
+        zIndex: 2.0
+    });
+    map.addLayer(wmsLayer_coast);
+    $('#coast').click(function(){
+        var imgest =  "./img/Simbo/estados.png";
+        if($(this).is(':checked')){
+            map.addLayer(wmsLayer_coast);
+            $('#imagen').append('<img src="'+imgest+'" class="imgest"/>');
+        } else {
+            map.removeLayer(wmsLayer_coast);
             $('img').remove('.TC_abi_FD_latest');
         }
     });   
@@ -445,11 +482,11 @@
 
     var wmsLayer_TC_abi_FD_latest = new  ol.layer.Tile({
         source: wmsSource_TC_abi_FD_latest,
-        zIndex: -1
+        zIndex: 1.5
     });
     map.addLayer(wmsLayer_TC_abi_FD_latest);
     $('#TC_abi_FD_latest').click(function(){
-        var imgest =  "static/img/Simbo/estados.png";
+        var imgest =  "./img/Simbo/estados.png";
         if($(this).is(':checked')){
             map.addLayer(wmsLayer_TC_abi_FD_latest);
             $('#imagen').append('<img src="'+imgest+'" class="imgest"/>');
@@ -457,8 +494,54 @@
             map.removeLayer(wmsLayer_TC_abi_FD_latest);
             $('img').remove('.TC_abi_FD_latest');
         }
-    });    
+    });  
+    
+    var wmsSource_FT_abi_FD_latest = new ol.source.TileWMS({
+    visible: true,
+    url: 'http://132.247.103.145:8080/geoserver/LANOT/wms',
+    params: {'LAYERS':'	LANOT:FT_abi_a1_latest'},
+    serverType: 'geoserver',
+    });
+
+    var wmsLayer_FT_abi_FD_latest = new  ol.layer.Tile({
+        source: wmsSource_FT_abi_FD_latest,
+        zIndex: 1.5
+    });
+    //map.addLayer(wmsLayer_FT_abi_FD_latest);
+    $('#FT_abi_FD_latest').click(function(){
+        var imgest =  "./img/Simbo/estados.png";
+        if($(this).is(':checked')){
+            map.addLayer(wmsLayer_FT_abi_FD_latest);
+            $('#imagen').append('<img src="'+imgest+'" class="imgest"/>');
+        } else {
+            map.removeLayer(wmsLayer_FT_abi_FD_latest);
+            $('img').remove('.TC_abi_FD_latest');
+        }
+    });   
     // CAPAS POLAR
+    var wmsSource_TC_viirs_latest = new ol.source.TileWMS({
+    visible: true,
+    url: 'http://132.247.103.145:8080/geoserver/LANOT/wms',
+    params: {'LAYERS':'LANOT:TC_viirs'},
+    serverType: 'geoserver',
+    });
+
+    var wmsLayer_TC_viirs_latest = new  ol.layer.Tile({
+        source: wmsSource_TC_viirs_latest,
+        zIndex: 1.5
+    });
+    map.addLayer(wmsLayer_TC_viirs_latest);
+    $('#TC_viirs_latest').click(function(){
+        var imgest =  "./img/Simbo/estados.png";
+        if($(this).is(':checked')){
+            map.addLayer(wmsLayer_TC_viirs_latest);
+            $('#imagen').append('<img src="'+imgest+'" class="imgest"/>');
+        } else {
+            map.removeLayer(wmsLayer_TC_viirs_latest);
+            $('img').remove('.TC_abi_FD_latest');
+        }
+    });  
+
 
     // CAPAS SENTINEL-2
     //Layer SWIR T13QFB
@@ -471,11 +554,11 @@
 
     var wmsLayer_SWIR_T13QFB_latest = new  ol.layer.Tile({
         source: wmsSource_SWIR_T13QFB_latest,
-        zIndex: -1
+        zIndex: 1.5
     });
     map.addLayer(wmsLayer_SWIR_T13QFB_latest);
     $('#SWIR_T13QFB_latest').click(function(){
-        var imgest =  "static/img/Simbo/estados.png";
+        var imgest =  "./img/Simbo/estados.png";
         if($(this).is(':checked')){
             map.addLayer(wmsLayer_SWIR_T13QFB_latest);
             $('#imagen').append('<img src="'+imgest+'" class="imgest"/>');
@@ -495,11 +578,11 @@
 
     var wmsLayer_SWIR_T14QNG_latest = new  ol.layer.Tile({
         source: wmsSource_SWIR_T14QNG_latest,
-        zIndex: -1
+        zIndex: 1.5
     });
     map.addLayer(wmsLayer_SWIR_T14QNG_latest);
     $('#SWIR_T14QNG_latest').click(function(){
-        var imgest =  "static/img/Simbo/estados.png";
+        var imgest =  "./img/Simbo/estados.png";
         if($(this).is(':checked')){
             map.addLayer(wmsLayer_SWIR_T14QNG_latest);
             $('#imagen').append('<img src="'+imgest+'" class="imgest"/>');
@@ -519,11 +602,11 @@
 
     var wmsLayer_SWIR_T15PWS_latest = new  ol.layer.Tile({
         source: wmsSource_SWIR_T15PWS_latest,
-        zIndex: -1
+        zIndex: 1.5
     });
     map.addLayer(wmsLayer_SWIR_T15PWS_latest);
     $('#SWIR_T15PWS_latest').click(function(){
-        var imgest =  "static/img/Simbo/estados.png";
+        var imgest =  "./img/Simbo/estados.png";
         if($(this).is(':checked')){
             map.addLayer(wmsLayer_SWIR_T15PWS_latest);
             $('#imagen').append('<img src="'+imgest+'" class="imgest"/>');
@@ -543,11 +626,11 @@
 
     var wmsLayer_SWIR_T15QVV_latest = new  ol.layer.Tile({
         source: wmsSource_SWIR_T15QVV_latest,
-        zIndex: -1
+        zIndex: 1.5
     });
     map.addLayer(wmsLayer_SWIR_T15QVV_latest);
     $('#SWIR_T15QVV_latest').click(function(){
-        var imgest =  "static/img/Simbo/estados.png";
+        var imgest =  "./img/Simbo/estados.png";
         if($(this).is(':checked')){
             map.addLayer(wmsLayer_SWIR_T15QVV_latest);
             $('#imagen').append('<img src="'+imgest+'" class="imgest"/>');
@@ -567,11 +650,11 @@
 
     var wmsLayer_TC_T13QFB_latest = new  ol.layer.Tile({
         source: wmsSource_TC_T13QFB_latest,
-        zIndex: -1
+        zIndex: 1.5
     });
     map.addLayer(wmsLayer_TC_T13QFB_latest);
     $('#TC_T13QFB_latest').click(function(){
-        var imgest =  "static/img/Simbo/estados.png";
+        var imgest =  "./img/Simbo/estados.png";
         if($(this).is(':checked')){
             map.addLayer(wmsLayer_TC_T13QFB_latest);
             $('#imagen').append('<img src="'+imgest+'" class="imgest"/>');
@@ -591,11 +674,11 @@
 
     var wmsLayer_TC_T14QNG_latest = new  ol.layer.Tile({
         source: wmsSource_TC_T14QNG_latest,
-        zIndex: -1
+        zIndex: 1.5
     });
     map.addLayer(wmsLayer_TC_T14QNG_latest);
     $('#TC_T14QNG_latest').click(function(){
-        var imgest =  "static/img/Simbo/estados.png";
+        var imgest =  "./img/Simbo/estados.png";
         if($(this).is(':checked')){
             map.addLayer(wmsLayer_TC_T14QNG_latest);
             $('#imagen').append('<img src="'+imgest+'" class="imgest"/>');
@@ -615,11 +698,11 @@
 
     var wmsLayer_TC_T15PWS_latest = new  ol.layer.Tile({
         source: wmsSource_TC_T15PWS_latest,
-        zIndex: -1
+        zIndex: 1.5
     });
     map.addLayer(wmsLayer_TC_T15PWS_latest);
     $('#TC_T15PWS_latest').click(function(){
-        var imgest =  "static/img/Simbo/estados.png";
+        var imgest =  "./img/Simbo/estados.png";
         if($(this).is(':checked')){
             map.addLayer(wmsLayer_TC_T15PWS_latest);
             $('#imagen').append('<img src="'+imgest+'" class="imgest"/>');
@@ -639,11 +722,11 @@
 
     var wmsLayer_TC_T15QVV_latest = new  ol.layer.Tile({
         source: wmsSource_TC_T15QVV_latest,
-        zIndex: -1
+        zIndex: 1.5
     });
     map.addLayer(wmsLayer_TC_T15QVV_latest);
     $('#TC_T15QVV_latest').click(function(){
-        var imgest =  "static/img/Simbo/estados.png";
+        var imgest =  "./img/Simbo/estados.png";
         if($(this).is(':checked')){
             map.addLayer(wmsLayer_TC_T15QVV_latest);
             $('#imagen').append('<img src="'+imgest+'" class="imgest"/>');
@@ -753,7 +836,7 @@
     });
     map.addLayer(wmsLayerdark);
 
-    $('#gebco').click(function(){
+/*     $('#gebco').click(function(){
         map.addLayer(wmsLayerdark)
         $('#gebcosimbology').html('<img src="./img/Simbo/gebcom.png" id="gebcosim">')
         $(this).css({'border-color':'#00c3ff','border-width':'3px'})
@@ -763,7 +846,7 @@
         map.removeLayer(wmsLayersatel)
         map.removeLayer(wmsLayerOSM)
         map.removeLayer(wmsLayerGray)
-    });
+    }); */
 
 
     //Geocoder
