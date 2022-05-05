@@ -100,9 +100,8 @@ if len(tilesDirs) != 0:
 
         print('Procesando: '+archivo)
         fecha = obtieneFecha(archivo)
-        fechaStr = datetime.datetime.strptime(fecha,'%Y%m%dT%H%M%S')
-        dia = fechaStr.strftime('%Y-%m-%d')
-        hora = fechaStr.strftime('%H:%M')
+        dia = fecha.split('T')[0]
+        hora = fecha.split('T')[1]
         fechaImaProc = obtieneFechaImaProc(archivo)
         tile = obtieneTile(archivo)
         anio = obtieneAnio(archivo)
