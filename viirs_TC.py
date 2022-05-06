@@ -129,9 +129,9 @@ def paso2(pathInput,pathOutput,salida):
     fechahora = archivo1.split('/')[-1].split('.')[1].split('_')[1]
     print(fechahora)
     fechahora = datetime.strptime(fechahora,'t%H%M%S%f')
-    hora = fechahora.strftime('%H:M')
+    hora = fechahora.strftime('%H:%M')
         
-    escribeDatos(pathOutput,'viirsTC',archivo1+' '+archivo2,dia,hora)
+    escribeDatos(pathOutput,'viirs_TC',archivo1+' '+archivo2,dia,hora)
 
 def viirsTC(pathInput,pathOutput):
     paso = comparaPaso(pathInput)
