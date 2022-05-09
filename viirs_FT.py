@@ -294,20 +294,21 @@ def viirsFT(pathInput,pathOutput,pathTmp):
 
     elif paso == 2:
         print('2 PASOS VIIRS..')
-        b10_1,b10_2,salida = extraeArchivo(pathInput,'m10_2',paso)    
-        b11_1,b11_2,salida = extraeArchivo(pathInput,'m11_2',paso)
-        b12_1,b12_2,salida = extraeArchivo(pathInput,'m12_2',paso)
+        #b10_1,b10_2,salida = extraeArchivo(pathInput,'m10_2',paso)    
+        #b11_1,b11_2,salida = extraeArchivo(pathInput,'m11_2',paso)
+        #b12_1,b12_2,salida = extraeArchivo(pathInput,'m12_2',paso)
     
-        b10 = [b10_1,b10_2]
-        b11 = [b11_1,b11_2]
-        b12 = [b12_1,b12_2]
+        #b10 = [b10_1,b10_2]
+        #b11 = [b11_1,b11_2]
+        #b12 = [b12_1,b12_2]
 
-        print(b10)
-        print(b11)
-        print(b12)
+        #print(b10)
+        #print(b11)
+        #print(b12)
         
-        paso2(b12,b11,b10,pathOutput,salida,pathTmp)
-        borra(pathTmp,paso)
+        #paso2(b12,b11,b10,pathOutput,salida,pathTmp)
+        #borra(pathTmp,paso)
+        # Paso 2 no hace nada porque aun no esta instalado el gdal :(
     
     else:
         print('No hay archivos')

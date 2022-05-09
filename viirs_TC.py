@@ -142,9 +142,10 @@ def viirsTC(pathInput,pathOutput):
         paso1(pathInput,pathOutput,'viirs_TC_latest')
     
     elif paso == 2:
-        paso2(pathInput,pathOutput,'viirs_TC_latest')
-        borra('viirs_TC_latest_1_rec')
-        borra('viirs_TC_latest_2_rec')
+        print('Paso 2')
+        #paso2(pathInput,pathOutput,'viirs_TC_latest')
+        #borra('viirs_TC_latest_1_rec')
+        #borra('viirs_TC_latest_2_rec')
     else:
         print('No hay archivos')
     
