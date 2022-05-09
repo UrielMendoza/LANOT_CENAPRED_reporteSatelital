@@ -87,6 +87,7 @@ def paso1(pathInput,pathOutput,salida):
     fechadia = datetime.strptime(fechadia,'d%Y%m%d')
     dia = fechadia.strftime('%Y-%m-%d')
     fechahora = archivo.split('/')[-1].split('.')[1].split('_')[1]
+    print(dia)
     print(fechahora)
     fechahora = datetime.strptime(fechahora,'t%H%M%S%f')
     hora = fechahora.strftime('%H:%M')
