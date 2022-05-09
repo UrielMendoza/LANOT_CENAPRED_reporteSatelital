@@ -92,7 +92,7 @@ def paso1(pathInput,pathOutput,salida):
     fechahora = datetime.strptime(fechahora,'t%H%M%S%f')
     hora = fechahora.strftime('%H:%M')
 
-    #escribeDatos(pathOutput,'viirsTC',archivo,dia,hora)
+    escribeDatos(pathOutput,'viirs_TC',archivo,dia,hora)
 
       
 
