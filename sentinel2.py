@@ -70,7 +70,7 @@ def RGB(r,g,b,tile,pathOutputGeoTiff):
     nombre = pathOutputGeoTiff+'SWIR_'+tile+'_latest.tif'
     #os.system('gdal_merge.py -ot uint16 -a_nodata 0 -separate -co PHOTOMETRIC=RGB -o '+nombre+' '+r+' '+g+' '+b)
     os.system('gdalbuildvrt -separate stack.vrt '+r+' '+g+' '+b)
-    os.system('gdal_translate -of GTiff -ot Byte -scale 0 255 stack.vrt '+nombre)    
+    os.system('gdal_translate -of GTiff -ot Byte -scale 0 65535 0 255 stack.vrt '+nombre)    
 
 """ def generaDate(pathLatest,fecha):
     f = open('latest.csv','r') """
@@ -89,7 +89,7 @@ region = 'volcanes'
 bandas20m = ('B04','B8A','B12')
 tiles = base.tiles[region]
 #download_datasets.search_and_download_datasets(tiles, start_date, end_date, pathL2A, unzip=False)
-daysDelta = 0
+daysDelta = 4
 download_datasets.search_and_download_datasets(tiles, start_date - datetime.timedelta(days=daysDelta), end_date - datetime.timedelta(days=daysDelta), pathL2A, unzip=False)
 
 tilesDirs = glob(pathL2A+'*')
