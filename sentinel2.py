@@ -88,8 +88,9 @@ end_date = datetime.datetime.now()
 region = 'volcanes'
 bandas20m = ('B04','B8A','B12')
 tiles = base.tiles[region]
-#download_datasets.search_and_download_datasets(tiles, start_date, end_date, pathL2A, unzip=False)
-daysDelta = 4
+#download_datasets.search_and_download_datasets(tiles, start_date, end_d
+# ate, pathL2A, unzip=False)
+daysDelta = 3
 download_datasets.search_and_download_datasets(tiles, start_date - datetime.timedelta(days=daysDelta), end_date - datetime.timedelta(days=daysDelta), pathL2A, unzip=False)
 
 tilesDirs = glob(pathL2A+'*')
