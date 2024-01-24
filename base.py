@@ -7,6 +7,9 @@
 # Insert your api credencials
 Copernicus_username = "lanot_2020"
 Copernicus_password = "lanot_2020"
+# From DataSpace
+Dataspace_username = 'lanot@geografia.unam.mx'
+Dataspace_password = 'Lanot_sargazo_#2023'
 
 # ------------------------------------------------------------------------------
 
