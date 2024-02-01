@@ -179,7 +179,7 @@ def search_and_download_datasets(tiles, start_date, end_date, datadir, unzip=Fal
       download_products(products, datadir, unzip=unzip, max_retries=max_retries, verbose=verbose)
       # Empty the products dictionary
       products = None
-    except IndexError:
+    except IndexError or KeyError as e:
        # Continue to the next tile
       continue
 
