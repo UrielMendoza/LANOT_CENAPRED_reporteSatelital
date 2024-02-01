@@ -92,7 +92,9 @@ tiles = base.tiles[region]
 #download_datasets.search_and_download_datasets(tiles, start_date, end_d
 # ate, pathL2A, unzip=False)
 daysDelta = 0
-download_datasets_ds.search_and_download_datasets(tiles, start_date - datetime.timedelta(days=daysDelta), end_date - datetime.timedelta(days=daysDelta), pathL2A, unzip=False)
+
+for tile in tiles:
+    download_datasets_ds.search_and_download_datasets(tile, start_date - datetime.timedelta(days=daysDelta), end_date - datetime.timedelta(days=daysDelta), pathL2A, unzip=False)
 
 tilesDirs = glob(pathL2A+'*')
 
