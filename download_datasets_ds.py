@@ -21,7 +21,7 @@ import base
 
 # ==============================================================================
 
-def search_products(tile=None, date=None, search_string=None, product_type="L1C", satellite=None, query_args=None) -> dict: 
+def search_products(tile=None, date=None, search_string=None, product_type="L2A", satellite=None, query_args=None) -> dict: 
   '''
   Searches Copernicus DataSpace for Sentinel-2 datasets (products) for a given
   tile and date. Alternatively, if search_string is given pass that directly
@@ -36,6 +36,8 @@ def search_products(tile=None, date=None, search_string=None, product_type="L1C"
   # Level of the product
   if product_type == "L1C":
     level = "MSIL1C"
+  elif product_type == "L2A":
+    level = "MSIL2A"
   
   # Join the level and date
   date = f"{level}_{date}"
