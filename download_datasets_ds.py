@@ -171,6 +171,7 @@ def search_and_download_datasets(tiles, start_date, end_date, datadir, unzip=Fal
         Additional query arguments to be passed directly to SentinelAPI.query().
   '''
   for tile in tiles:
+    print(tile)
     # Find products
     products = search_products(tile, start_date, end_date, query_args=query_args)
     # Download products
