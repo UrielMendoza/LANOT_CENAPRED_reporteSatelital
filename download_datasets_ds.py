@@ -175,8 +175,12 @@ def search_and_download_datasets(tiles, start_date, end_date, datadir, unzip=Fal
   for tile in tiles:
     try:
       print(tile)
-      # Find products
-      products = search_products(tile, start_date, end_date, query_args=query_args)
+      try: 
+        # Find products
+        products = search_products(tile, start_date, end_date, query_args=query_args)
+      except IndexError or KeyError as e:
+        # Continue to the next tile
+        continue
       # Download products
       download_products(products, datadir, unzip=unzip, max_retries=max_retries, verbose=verbose)
       # Empty the products dictionary
