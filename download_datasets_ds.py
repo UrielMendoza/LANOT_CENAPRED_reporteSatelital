@@ -178,7 +178,7 @@ def search_and_download_datasets(tiles, start_date, end_date, datadir, unzip=Fal
       try: 
         # Find products
         products = search_products(tile, start_date, end_date, query_args=query_args)
-      except IndexError or KeyError as e:
+      except KeyError as e:
         # Continue to the next tile
         continue
       # Download products
